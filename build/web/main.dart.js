@@ -50990,7 +50990,7 @@ return s},
 $S:35}
 A.OO.prototype={}
 A.xj.prototype={
-N(a){return new A.oS(B.Bc,"Flutter Demo",A.a2g(null,A.a7d(B.I,B.AZ),!0),null)}}
+N(a){return new A.oS(B.Bc,"Flutter Demox",A.a2g(null,A.a7d(B.I,B.AZ),!0),null)}}
 A.p3.prototype={
 an(){return new A.rN(B.p)}}
 A.rN.prototype={
