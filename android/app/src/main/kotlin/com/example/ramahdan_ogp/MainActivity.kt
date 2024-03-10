@@ -1,4 +1,4 @@
-package com.example.ramahdan_ogp
+package com.ogp.ramadhan
 
 import io.flutter.embedding.android.FlutterActivity
 
