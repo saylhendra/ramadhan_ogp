@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/app_theme.dart';
@@ -9,20 +10,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Portal Ramadhan OGP',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppTheme.plantation,
-          foregroundColor: AppTheme.yellowNapes,
-          centerTitle: true,
-          actionsIconTheme: IconThemeData(color: AppTheme.pinkDown),
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.pinkDown),
-        useMaterial3: true,
-        fontFamily: GoogleFonts.notoKufiArabic().fontFamily,
-      ),
-      routerConfig: routerController,
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_, child) {
+        return MaterialApp.router(
+          title: 'Portal Ramadhan OGP',
+          theme: ThemeData(
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppTheme.plantation,
+              foregroundColor: AppTheme.yellowNapes,
+              centerTitle: true,
+              actionsIconTheme: IconThemeData(color: AppTheme.pinkDown),
+            ),
+            colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.pinkDown),
+            useMaterial3: true,
+            fontFamily: GoogleFonts.notoKufiArabic().fontFamily,
+          ),
+          routerConfig: routerController,
+        );
+      },
     );
   }
 }
