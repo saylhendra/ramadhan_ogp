@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -55,13 +57,25 @@ class HomeScreen extends HookConsumerWidget {
             return ListView.builder(
                 itemCount: datas.length,
                 itemBuilder: (item, index) {
-                  return Text('');
+                  return Card(
+                    child: ListTile(
+                        leading: CircleAvatar(
+                          child: datas[index]['avatar'].length > 0 ? getImageBase64(datas[index]['avatar']) : const Icon(Icons.person),
+                        ),
+                        title: Text(datas[index]['name'])),
+                  );
                 });
           },
           error: (e, s) => Text('Error $s'),
-          loading: () => Center(
-                child: CircularProgressIndicator(),
-              )),
+          loading: () => Center(child: CircularProgressIndicator())),
     );
+  }
+
+  getImageBase64(data) {
+    if (data != null) {
+      return Image.memory(base64Decode(data));
+    } else {
+      return const Icon(Icons.person);
+    }
   }
 }

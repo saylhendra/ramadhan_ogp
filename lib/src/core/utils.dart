@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -291,4 +292,10 @@ Widget launchStatus(BuildContext context, AsyncSnapshot<void> snapshot) {
 String generateUUID() {
   var uuid = const Uuid();
   return uuid.v4();
+}
+
+String getBase64FormateFile(File file) {
+  List<int> fileInByte = file.readAsBytesSync();
+  String fileInBase64 = base64Encode(fileInByte);
+  return fileInBase64;
 }

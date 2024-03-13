@@ -1,6 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
-import 'package:ramadhan_ogp/src/core/endpoints.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,6 +15,7 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
     required String dob,
     required String gender,
     required String address,
+    String? avatar,
     required int age,
   }) async {
     await Supabase.instance.client.from('sanlats').upsert([
@@ -27,6 +25,10 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
         'age': age,
         'dob': dob,
         'remarks': address,
+        'avatar': avatar ?? '',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+        'published_at': DateTime.now().toIso8601String(),
       }
     ]);
   }
@@ -36,12 +38,7 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
 class PesertaSanlatController extends _$PesertaSanlatController {
   @override
   FutureOr<List<dynamic>> build() async {
-    final dio = Dio();
-    var res = await dio.get(Endpoints.sanlats);
-    if (res.statusCode == 200) {
-      debugPrint(res.data);
-      return res.data;
-    }
-    return [];
+    List x = await Supabase.instance.client.from('sanlats').select();
+    return x;
   }
 }

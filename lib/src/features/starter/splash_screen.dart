@@ -20,6 +20,7 @@ class SplashScreen extends HookConsumerWidget {
           HomeScreen.routeName,
         ),
       );
+      return null;
     }, [_delay.value]);
 
     return Center(

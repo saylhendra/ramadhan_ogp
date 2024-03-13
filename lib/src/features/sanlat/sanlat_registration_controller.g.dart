@@ -7,7 +7,7 @@ part of 'sanlat_registration_controller.dart';
 // **************************************************************************
 
 String _$sanlatRegistrationControllerHash() =>
-    r'fa8a285a476c8a88828e31b44db3bad7359d3f15';
+    r'16714d92bf7ff7121387569db2b2c786a2b13f2e';
 
 /// See also [SanlatRegistrationController].
 @ProviderFor(SanlatRegistrationController)
@@ -24,7 +24,7 @@ final sanlatRegistrationControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$SanlatRegistrationController = AutoDisposeAsyncNotifier<void>;
 String _$pesertaSanlatControllerHash() =>
-    r'7465e8b0b14316c1d023b87559df72ff66740c46';
+    r'd737d0b3b6079ba92ebd86bcbc1e6feff4ccbcfc';
 
 /// See also [PesertaSanlatController].
 @ProviderFor(PesertaSanlatController)

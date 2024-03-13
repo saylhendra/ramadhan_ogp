@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -5,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../home/home_screen.dart';
@@ -32,6 +36,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     var calculatedAge = useState<int>(0);
     var _character = useState(EnumGender.ikhwan);
     var loadingSubmit = useState<bool>(false);
+    var avatarController = useTextEditingController();
     final listMasterBlock = ref.watch(masterBlockControllerProvider);
 
     return PopScope(
@@ -56,25 +61,33 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                 },
               ),
               //radio button gender
-              Column(
-                children: [
-                  RadioListTile<EnumGender>(
-                    title: const Text('Ikhwan'),
-                    value: EnumGender.ikhwan,
-                    groupValue: _character.value,
-                    onChanged: (value) {
-                      _character.value = value ?? EnumGender.ikhwan;
-                    },
-                  ),
-                  RadioListTile<EnumGender>(
-                    title: const Text('Akhwat'),
-                    value: EnumGender.akhwat,
-                    groupValue: _character.value,
-                    onChanged: (value) {
-                      _character.value = value ?? EnumGender.ikhwan;
-                    },
-                  ),
-                ],
+              Container(
+                color: Colors.grey[200],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RadioListTile<EnumGender>(
+                      dense: false,
+                      visualDensity: VisualDensity.compact,
+                      title: const Text('Ikhwan'),
+                      value: EnumGender.ikhwan,
+                      groupValue: _character.value,
+                      onChanged: (value) {
+                        _character.value = value ?? EnumGender.ikhwan;
+                      },
+                    ),
+                    RadioListTile<EnumGender>(
+                      dense: false,
+                      visualDensity: VisualDensity.compact,
+                      title: const Text('Akhwat'),
+                      value: EnumGender.akhwat,
+                      groupValue: _character.value,
+                      onChanged: (value) {
+                        _character.value = value ?? EnumGender.ikhwan;
+                      },
+                    ),
+                  ],
+                ),
               ),
               TextFormField(
                 controller: dobController,
@@ -135,7 +148,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   onChanged: (value) {
                     addressController.text = value?.title ?? '';
                   },
-                  selectedItem: null,
+                  selectedItem: datas.first,
                 );
               }, loading: () {
                 return Center(child: const CircularProgressIndicator());
@@ -143,29 +156,44 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                 return Text('Error: $e');
               }),
               SizedBox(height: 10.0.sp),
-              FilledButton(
-                onPressed: loadingSubmit.value == true
-                    ? null
-                    : () async {
-                        if (_validate()) {
-                          loadingSubmit.value = true;
-                          await ref.read(sanlatRegistrationControllerProvider.notifier).doSubmitRegistration(
-                                age: calculatedAge.value,
-                                gender: _character == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
-                                name: namaController.text,
-                                dob: dobInsertController.text,
-                                address: addressController.text,
-                              );
-                          loadingSubmit.value = false;
-                          context.goNamed(HomeScreen.routeName);
-                        }
-                      },
-                child: loadingSubmit.value
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : const Text('Submit'),
+              OutlinedButton.icon(
+                label: const Text('Upload Foto Peserta'),
+                icon: const Icon(Icons.image),
+                onPressed: () async {
+                  avatarController.text = await doUploadImage(context);
+                },
               ),
+              SizedBox(height: 10.0.sp),
+              FilledButton(
+                  onPressed: loadingSubmit.value == true
+                      ? null
+                      : () {
+                          if (_validate()) {
+                            loadingSubmit.value = true;
+                            ref
+                                .read(sanlatRegistrationControllerProvider.notifier)
+                                .doSubmitRegistration(
+                                  age: calculatedAge.value,
+                                  gender: _character == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
+                                  name: namaController.text,
+                                  avatar: avatarController.text,
+                                  dob: dobInsertController.text,
+                                  address: addressController.text,
+                                )
+                                .then(
+                              (value) {
+                                loadingSubmit.value = false;
+                                ref.invalidate(pesertaSanlatControllerProvider);
+                                context.pushReplacementNamed(HomeScreen.routeName);
+                              },
+                            );
+                          }
+                        },
+                  child: loadingSubmit.value
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Text('Submit')),
               Wrap(
                 direction: Axis.vertical,
                 children: [
@@ -210,6 +238,45 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
         },
       );
     }
+  }
+
+  Future<String> doUploadImage(BuildContext context) async {
+    var result = '';
+    XFile? imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (imageSource != null) {
+      var f = await imageSource.readAsBytes();
+      File photo = File(f.toSet().toString());
+      String fileInBase64 = base64Encode(f);
+      // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
+      final bytes = f.lengthInBytes;
+      print(bytes.toString());
+      if (bytes > 5000000) {
+        showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+      } else {
+        result = fileInBase64;
+      }
+    }
+    return result;
+  }
+
+  void showAlertDialog(BuildContext context, String s) {
+    showDialog(
+      context: context,
+      builder: (dcontext) {
+        return AlertDialog(
+          title: const Text('Info'),
+          content: Text(s),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dcontext).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
