@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/features/home/home_menu_widget.dart';
+import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.dart';
 
 import '../../core/app_theme.dart';
 import '../sanlat/sanlat_registration_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
 
   static const String routeName = 'home-screen';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var myGradient = const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [
-        AppTheme.pinkDown,
-        AppTheme.yellowNapes,
-        AppTheme.oldBrick,
-      ],
+      colors: [AppTheme.pinkDown, AppTheme.yellowNapes, AppTheme.oldBrick],
     );
     return Scaffold(
       appBar: AppBar(
@@ -52,16 +50,18 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       drawer: HomeMenuWidget(),
-      body: const Center(
-        child: Text(
-          '﷽\nSelamat Datang di Orchid Green Park Ramadhan Kareem\n\n',
-          style: TextStyle(
-            fontFamily: 'NotoKufiArabic',
-            fontSize: 24,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
+      body: ref.watch(pesertaSanlatControllerProvider).when(
+          data: (datas) {
+            return ListView.builder(
+                itemCount: datas.length,
+                itemBuilder: (item, index) {
+                  return Text('');
+                });
+          },
+          error: (e, s) => Text('Error $s'),
+          loading: () => Center(
+                child: CircularProgressIndicator(),
+              )),
     );
   }
 }
