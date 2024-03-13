@@ -132,7 +132,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
               listMasterBlock.when(data: (datas) {
                 return DropdownSearch<MasterBlockDomain>(
                   validator: (value) {
-                    if (value == null) {
+                    if (addressController.text.isEmpty) {
                       return 'Alamat tidak boleh kosong';
                     }
                     return null;
@@ -149,7 +149,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   onChanged: (value) {
                     addressController.text = value?.title ?? '';
                   },
-                  selectedItem: datas.first,
+                  selectedItem: MasterBlockDomain(title: 'Pilih Alamat'),
                 );
               }, loading: () {
                 return Center(child: const CircularProgressIndicator());
