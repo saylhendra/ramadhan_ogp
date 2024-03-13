@@ -59,10 +59,38 @@ class HomeScreen extends HookConsumerWidget {
                 itemBuilder: (item, index) {
                   return Card(
                     child: ListTile(
-                        leading: CircleAvatar(
-                          child: datas[index]['avatar'].length > 0 ? getImageBase64(datas[index]['avatar']) : const Icon(Icons.person),
+                      // leading: CircleAvatar(
+                      //   radius: 15.5.sp,
+                      //   child: datas[index]['avatar'].length > 0 ? getImageBase64(datas[index]['avatar']) : const Icon(Icons.person),
+                      // ),
+                      title: IntrinsicHeight(
+                        child: Row(
+                          // direction: Axis.horizontal,
+                          // crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            datas[index]['avatar'].length > 0 ? getImageBase64(datas[index]['avatar']) : const Icon(Icons.person),
+                            VerticalDivider(),
+                            Wrap(
+                              direction: Axis.vertical,
+                              crossAxisAlignment: WrapCrossAlignment.start,
+                              children: [
+                                Text(datas[index]['name'], style: TextStyle(fontSize: 16.0.sp)),
+                                Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 11.0.sp)),
+                                Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 11.0.sp)),
+                              ],
+                            ),
+                          ],
                         ),
-                        title: Text(datas[index]['name'])),
+                      ),
+                      // subtitle: Wrap(
+                      //   direction: Axis.vertical,
+                      //   crossAxisAlignment: WrapCrossAlignment.start,
+                      //   children: [
+                      //     Text('Usia: ${datas[index]['age']} tahun'),
+                      //     Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}'),
+                      //   ],
+                      // ),
+                    ),
                   );
                 });
           },
@@ -71,11 +99,22 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  getImageBase64(data) {
+  Widget getImageBase64(data) {
     if (data != null) {
-      return Image.memory(base64Decode(data));
+      var avatar = Container(
+        width: 50.0.sp,
+        height: 50.0.sp,
+        constraints: BoxConstraints(minWidth: 50.0.sp, minHeight: 0.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100.0.sp),
+            image: DecorationImage(
+              image: MemoryImage(base64Decode(data)),
+              fit: BoxFit.cover,
+            )),
+      );
+      return avatar;
     } else {
-      return const Icon(Icons.person);
+      return Icon(Icons.person, size: 150.0.sp, color: Colors.grey);
     }
   }
 }

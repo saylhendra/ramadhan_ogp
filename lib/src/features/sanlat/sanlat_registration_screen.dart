@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 
 import '../home/home_screen.dart';
@@ -244,10 +243,12 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
 
   Future<String> doUploadImage(BuildContext context) async {
     var result = '';
-    final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (!kIsWeb) {
+    if (kIsWeb) {
+      // final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final imageSource = await ImagePickerWeb.getImageAsBytes();
       if (imageSource != null) {
-        var f = await imageSource.readAsBytes();
+        // var f = await imageSource.readAsBytes();
+        var f = imageSource;
         // File photo = File(f.toSet().toString());
         String fileInBase64 = base64Encode(f);
         // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
@@ -260,16 +261,17 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
         }
       }
     } else {
-      if (imageSource != null) {
-        var f = File(imageSource.path);
-        final bytes = f.lengthSync();
-        print(bytes.toString());
-        if (bytes > 5000000) {
-          showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
-        } else {
-          result = base64Encode(f.readAsBytesSync());
-        }
-      }
+      // final imageSource = await ImagePickerWeb.getImageAsBytes();
+      // if (imageSource != null) {
+      //   var f = File(imageSource.path);
+      //   final bytes = f.lengthSync();
+      //   print(bytes.toString());
+      //   if (bytes > 5000000) {
+      //     showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+      //   } else {
+      //     result = base64Encode(f.readAsBytesSync());
+      //   }
+      // }
     }
     return result;
   }
