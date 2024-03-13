@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
+import 'package:ramadhan_ogp/src/features/info/presentation/info_controller.dart';
 
 import '../home/home_screen.dart';
 import '../master/domain/master_block_domain.dart';
@@ -39,6 +40,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     var avatarController = useTextEditingController();
     var imagePreview = useState<String>('');
     final listMasterBlock = ref.watch(masterBlockControllerProvider);
+    final infosState = ref.watch(infoControllerProvider);
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -48,184 +50,202 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
         appBar: AppBar(
           title: const Text("Daftar Sanlat"),
         ),
-        body: Form(
-          key: _formKey,
-          child: ListView(
-            padding: MediaQuery.of(context).padding + EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 10.0.sp),
-            children: [
-              TextFormField(
-                controller: namaController,
-                validator: ValidationBuilder().required('Nama tidak boleh kosong').build(),
-                decoration: InputDecoration(labelText: 'Nama Anak'),
-                onFieldSubmitted: (value) {
-                  _validate();
+        body: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: infosState.when(
+                data: (datas) {
+                  var info = datas[0];
+                  return ListView(
+                    padding: MediaQuery.of(context).padding + EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 10.0.sp),
+                    children: [
+                      ListTile(title: Text(info['title'].toString())),
+                      ListTile(title: Text(info['content_markdown'].toString())),
+                    ],
+                  );
+                },
+                loading: () {
+                  return const Center(child: CircularProgressIndicator());
+                },
+                error: (e, s) {
+                  return Text('Error: $e');
                 },
               ),
-              SizedBox(height: 5.0.sp),
-              Container(
-                color: Colors.grey[200],
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Expanded(
+              flex: 3,
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: MediaQuery.of(context).padding + EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 0.0.sp),
                   children: [
-                    RadioListTile<EnumGender>(
-                      dense: false,
-                      visualDensity: VisualDensity.compact,
-                      title: const Text('Ikhwan'),
-                      value: EnumGender.ikhwan,
-                      groupValue: _character.value,
-                      onChanged: (value) {
-                        _character.value = value ?? EnumGender.ikhwan;
+                    TextFormField(
+                      controller: namaController,
+                      validator: ValidationBuilder().required('Nama tidak boleh kosong').build(),
+                      decoration: InputDecoration(labelText: 'Nama Anak'),
+                      onFieldSubmitted: (value) {
+                        _validate();
                       },
                     ),
-                    RadioListTile<EnumGender>(
-                      dense: false,
-                      visualDensity: VisualDensity.compact,
-                      title: const Text('Akhwat'),
-                      value: EnumGender.akhwat,
-                      groupValue: _character.value,
-                      onChanged: (value) {
-                        _character.value = value ?? EnumGender.ikhwan;
-                      },
+                    SizedBox(height: 5.0.sp),
+                    Container(
+                      color: Colors.grey[200],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RadioListTile<EnumGender>(
+                            dense: false,
+                            visualDensity: VisualDensity.compact,
+                            title: const Text('Ikhwan'),
+                            value: EnumGender.ikhwan,
+                            groupValue: _character.value,
+                            onChanged: (value) {
+                              _character.value = value ?? EnumGender.ikhwan;
+                            },
+                          ),
+                          RadioListTile<EnumGender>(
+                            dense: false,
+                            visualDensity: VisualDensity.compact,
+                            title: const Text('Akhwat'),
+                            value: EnumGender.akhwat,
+                            groupValue: _character.value,
+                            onChanged: (value) {
+                              _character.value = value ?? EnumGender.ikhwan;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
+                    SizedBox(height: 5.0.sp),
+                    TextFormField(
+                      controller: dobController,
+                      validator: ValidationBuilder().required('Tgl Lahir tidak boleh kosong').build(),
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'Tanggal Lahir',
+                        disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                        suffixIcon: Icon(Icons.calendar_today),
+                      ),
+                      onTap: () => showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now().subtract(Duration(days: 365 * 3)),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                      ).then((dt) {
+                        if (dt != null) {
+                          dobController.text = DateFormat('EEEE, dd-MMM-yyyy', 'id').format(dt);
+                          dobInsertController.text = DateFormat('yyyy-MM-dd').format(dt);
+                          var age = DateTime.now().subtract(Duration(days: 365)).year - dt.year;
+                          calculatedAge.value = age;
+                          //setfocus on calculatedAgeController
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          var selectedYear = dt.year;
+                          var selectedDay = dt.day;
+                          var selectedMon = dt.month;
+                          DateTime date1 = DateTime(selectedYear, selectedMon, selectedDay);
+                          var diff = DateTime.now().difference(date1);
+                          var days = diff.inDays;
+                          var months = (days / 30).floor();
+                          var remainingDays = days % 30;
+                          calculatedAgeController.text = '$age tahun, $months bulan, $remainingDays hari'.toString();
+                          // calculatedAgeController.text = age.toString();
+                        }
+                      }),
+                    ),
+                    SizedBox(height: 5.0.sp),
+                    TextFormField(
+                      focusNode: FocusNode(),
+                      controller: calculatedAgeController,
+                      readOnly: true,
+                      decoration: InputDecoration(labelText: 'Usia Saat Ini (Tahun)', filled: true, fillColor: Colors.grey[200]),
+                    ),
+                    SizedBox(height: 5.0.sp),
+                    listMasterBlock.when(data: (datas) {
+                      return DropdownSearch<MasterBlockDomain>(
+                        validator: (value) {
+                          if (addressController.text.isEmpty) {
+                            return 'Alamat tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                        popupProps: PopupProps.menu(showSearchBox: true),
+                        items: datas,
+                        itemAsString: (item) => item.title ?? '',
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: "Alamat Rumah (Block-Nomor)",
+                            hintText: "Pilih block dan nomor rumah",
+                          ),
+                        ),
+                        onChanged: (value) {
+                          addressController.text = value?.title ?? '';
+                        },
+                        selectedItem: MasterBlockDomain(title: 'Pilih Alamat'),
+                      );
+                    }, loading: () {
+                      return Center(child: const CircularProgressIndicator());
+                    }, error: (e, s) {
+                      return Text('Error: $e');
+                    }),
+                    SizedBox(height: 5.0.sp),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        if (imagePreview.value.length > 0)
+                          CircleAvatar(
+                            radius: 50.0,
+                            child: Image.memory(
+                              base64Decode(imagePreview.value),
+                              width: 100.0.sp,
+                              height: 100.0.sp,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        else
+                          const Icon(Icons.person, size: 100.0),
+                        OutlinedButton.icon(
+                          label: const Text('Upload Foto Peserta'),
+                          icon: const Icon(Icons.image),
+                          onPressed: () async {
+                            avatarController.text = await doUploadImage(context);
+                            imagePreview.value = avatarController.text;
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5.0.sp),
+                    FilledButton(
+                        onPressed: loadingSubmit.value == true
+                            ? null
+                            : () {
+                                if (_validate()) {
+                                  loadingSubmit.value = true;
+                                  ref
+                                      .read(sanlatRegistrationControllerProvider.notifier)
+                                      .doSubmitRegistration(
+                                        age: calculatedAge.value,
+                                        gender: _character == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
+                                        name: namaController.text,
+                                        avatar: avatarController.text,
+                                        dob: dobInsertController.text,
+                                        address: addressController.text,
+                                      )
+                                      .then(
+                                    (value) {
+                                      loadingSubmit.value = false;
+                                      ref.invalidate(pesertaSanlatControllerProvider);
+                                      context.pushReplacementNamed(HomeScreen.routeName);
+                                    },
+                                  );
+                                }
+                              },
+                        child: loadingSubmit.value ? Center(child: CircularProgressIndicator()) : const Text('Submit')),
                   ],
                 ),
               ),
-              SizedBox(height: 5.0.sp),
-              TextFormField(
-                controller: dobController,
-                validator: ValidationBuilder().required('Tgl Lahir tidak boleh kosong').build(),
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'Tanggal Lahir',
-                  disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                  suffixIcon: Icon(Icons.calendar_today),
-                ),
-                onTap: () => showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now().subtract(Duration(days: 365 * 3)),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime.now(),
-                ).then((dt) {
-                  if (dt != null) {
-                    dobController.text = DateFormat('EEEE, dd-MMM-yyyy', 'id').format(dt);
-                    dobInsertController.text = DateFormat('yyyy-MM-dd').format(dt);
-                    var age = DateTime.now().subtract(Duration(days: 365)).year - dt.year;
-                    calculatedAge.value = age;
-                    //setfocus on calculatedAgeController
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    var selectedYear = dt.year;
-                    var selectedDay = dt.day;
-                    var selectedMon = dt.month;
-                    DateTime date1 = DateTime(selectedYear, selectedMon, selectedDay);
-                    var diff = DateTime.now().difference(date1);
-                    var days = diff.inDays;
-                    var months = (days / 30).floor();
-                    var remainingDays = days % 30;
-                    calculatedAgeController.text = '$age tahun, $months bulan, $remainingDays hari'.toString();
-                    // calculatedAgeController.text = age.toString();
-                  }
-                }),
-              ),
-              SizedBox(height: 5.0.sp),
-              TextFormField(
-                focusNode: FocusNode(),
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Usia tidak boleh kosong';
-                //   }
-                //   //not zero
-                //   if (int.parse(value) == 0) {
-                //     return 'Usia tidak boleh 0';
-                //   }
-                //   return null;
-                // },
-                controller: calculatedAgeController,
-                readOnly: true,
-                decoration: InputDecoration(labelText: 'Usia Saat Ini (Tahun)', filled: true, fillColor: Colors.grey[200]),
-              ),
-              SizedBox(height: 5.0.sp),
-              listMasterBlock.when(data: (datas) {
-                return DropdownSearch<MasterBlockDomain>(
-                  validator: (value) {
-                    if (addressController.text.isEmpty) {
-                      return 'Alamat tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                  popupProps: PopupProps.menu(showSearchBox: true),
-                  items: datas,
-                  itemAsString: (item) => item.title ?? '',
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: "Alamat Rumah (Block-Nomor)",
-                      hintText: "Pilih block dan nomor rumah",
-                    ),
-                  ),
-                  onChanged: (value) {
-                    addressController.text = value?.title ?? '';
-                  },
-                  selectedItem: MasterBlockDomain(title: 'Pilih Alamat'),
-                );
-              }, loading: () {
-                return Center(child: const CircularProgressIndicator());
-              }, error: (e, s) {
-                return Text('Error: $e');
-              }),
-              SizedBox(height: 5.0.sp),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  if (imagePreview.value.length > 0)
-                    CircleAvatar(
-                      radius: 50.0,
-                      child: Image.memory(
-                        base64Decode(imagePreview.value),
-                        width: 100.0.sp,
-                        height: 100.0.sp,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  else
-                    const Icon(Icons.person, size: 100.0),
-                  OutlinedButton.icon(
-                    label: const Text('Upload Foto Peserta'),
-                    icon: const Icon(Icons.image),
-                    onPressed: () async {
-                      avatarController.text = await doUploadImage(context);
-                      imagePreview.value = avatarController.text;
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 5.0.sp),
-              FilledButton(
-                  onPressed: loadingSubmit.value == true
-                      ? null
-                      : () {
-                          if (_validate()) {
-                            loadingSubmit.value = true;
-                            ref
-                                .read(sanlatRegistrationControllerProvider.notifier)
-                                .doSubmitRegistration(
-                                  age: calculatedAge.value,
-                                  gender: _character == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
-                                  name: namaController.text,
-                                  avatar: avatarController.text,
-                                  dob: dobInsertController.text,
-                                  address: addressController.text,
-                                )
-                                .then(
-                              (value) {
-                                loadingSubmit.value = false;
-                                ref.invalidate(pesertaSanlatControllerProvider);
-                                context.pushReplacementNamed(HomeScreen.routeName);
-                              },
-                            );
-                          }
-                        },
-                  child: loadingSubmit.value ? Center(child: CircularProgressIndicator()) : const Text('Submit')),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
