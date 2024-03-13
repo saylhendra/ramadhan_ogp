@@ -28,23 +28,17 @@ class HomeScreen extends HookConsumerWidget {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.0),
-            child: TextButton(
+            child: FilledButton(
               onPressed: () {
                 context.pushNamed(SanlatRegistrationScreen.routeName);
               },
-              child: Ink(
-                decoration: BoxDecoration(
-                  gradient: myGradient,
-                  borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                ),
-                child: Container(
-                  height: 40.0,
-                  constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0), // min sizes for Material buttons
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Daftar Sanlat',
-                    textAlign: TextAlign.center,
-                  ),
+              child: Container(
+                height: 32.0,
+                constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0), // min sizes for Material buttons
+                alignment: Alignment.center,
+                child: const Text(
+                  'Daftar Sanlat',
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -54,39 +48,49 @@ class HomeScreen extends HookConsumerWidget {
       drawer: HomeMenuWidget(),
       body: ref.watch(pesertaSanlatControllerProvider).when(
           data: (datas) {
-            return ListView.builder(
-                itemCount: datas.length,
-                itemBuilder: (item, index) {
-                  return Card(
-                    child: ListTile(
-                      // leading: CircleAvatar(
-                      //   radius: 15.5,
-                      //   child: datas[index]['avatar'].length > 0 ? getImageBase64(datas[index]['avatar']) : const Icon(Icons.person),
-                      // ),
-                      title: IntrinsicHeight(
-                        child: Row(
-                          // direction: Axis.horizontal,
-                          // crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            getImageBase64(datas[index]['avatar']),
-                            VerticalDivider(),
-                            Wrap(
-                              direction: Axis.vertical,
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              children: [
-                                Text(datas[index]['name'], style: TextStyle(fontSize: 14.0)),
-                                Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 10.0)),
-                                Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 10.0)),
-                                Text('Mendaftar Pada: ${simpleDateTimeFormat(datas[index]['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                    style: TextStyle(fontSize: 10.0)),
-                              ],
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    flex: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Daftar Peserta Sanlat', style: TextStyle(fontSize: 18.0)),
+                    )),
+                Expanded(
+                  child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: datas.length,
+                      itemBuilder: (item, index) {
+                        return Card(
+                          elevation: 4.0,
+                          child: ListTile(
+                            title: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  getImageBase64(datas[index]['avatar']),
+                                  VerticalDivider(),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                    children: [
+                                      Text(datas[index]['name'], style: TextStyle(fontSize: 14.0)),
+                                      Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 10.0)),
+                                      Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 10.0)),
+                                      Text(
+                                          'Mendaftar Pada: ${simpleDateTimeFormat(datas[index]['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                          style: TextStyle(fontSize: 10.0)),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                });
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            );
           },
           error: (e, s) => Text('Error $s'),
           loading: () => Center(child: CircularProgressIndicator())),

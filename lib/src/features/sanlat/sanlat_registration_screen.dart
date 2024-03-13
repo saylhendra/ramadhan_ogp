@@ -37,6 +37,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     var _character = useState(EnumGender.ikhwan);
     var loadingSubmit = useState<bool>(false);
     var avatarController = useTextEditingController();
+    var imagePreview = useState<String>('');
     final listMasterBlock = ref.watch(masterBlockControllerProvider);
 
     return PopScope(
@@ -60,8 +61,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   _validate();
                 },
               ),
-              SizedBox(height: 10.0.sp),
-              //radio button gender
+              SizedBox(height: 5.0.sp),
               Container(
                 color: Colors.grey[200],
                 child: Column(
@@ -90,12 +90,14 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 5.0.sp),
               TextFormField(
                 controller: dobController,
                 validator: ValidationBuilder().required('Tgl Lahir tidak boleh kosong').build(),
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Tanggal Lahir',
+                  disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () => showDatePicker(
@@ -103,32 +105,45 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   initialDate: DateTime.now().subtract(Duration(days: 365 * 3)),
                   firstDate: DateTime(2000),
                   lastDate: DateTime.now(),
-                ).then((value) {
-                  if (value != null) {
-                    dobController.text = DateFormat('EEEE, dd-MMM-yyyy', 'id').format(value);
-                    dobInsertController.text = DateFormat('yyyy-MM-dd').format(value);
-                    var age = DateTime.now().toLocal().year - value.year;
+                ).then((dt) {
+                  if (dt != null) {
+                    dobController.text = DateFormat('EEEE, dd-MMM-yyyy', 'id').format(dt);
+                    dobInsertController.text = DateFormat('yyyy-MM-dd').format(dt);
+                    var age = DateTime.now().subtract(Duration(days: 365)).year - dt.year;
                     calculatedAge.value = age;
-                    calculatedAgeController.text = age.toString();
+                    //setfocus on calculatedAgeController
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    var selectedYear = dt.year;
+                    var selectedDay = dt.day;
+                    var selectedMon = dt.month;
+                    DateTime date1 = DateTime(selectedYear, selectedMon, selectedDay);
+                    var diff = DateTime.now().difference(date1);
+                    var days = diff.inDays;
+                    var months = (days / 30).floor();
+                    var remainingDays = days % 30;
+                    calculatedAgeController.text = '$age tahun, $months bulan, $remainingDays hari'.toString();
+                    // calculatedAgeController.text = age.toString();
                   }
                 }),
               ),
-              //calculated age
+              SizedBox(height: 5.0.sp),
               TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Usia tidak boleh kosong';
-                  }
-                  //not zero
-                  if (int.parse(value) == 0) {
-                    return 'Usia tidak boleh 0';
-                  }
-                  return null;
-                },
+                focusNode: FocusNode(),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Usia tidak boleh kosong';
+                //   }
+                //   //not zero
+                //   if (int.parse(value) == 0) {
+                //     return 'Usia tidak boleh 0';
+                //   }
+                //   return null;
+                // },
                 controller: calculatedAgeController,
                 readOnly: true,
                 decoration: InputDecoration(labelText: 'Usia Saat Ini (Tahun)', filled: true, fillColor: Colors.grey[200]),
               ),
+              SizedBox(height: 5.0.sp),
               listMasterBlock.when(data: (datas) {
                 return DropdownSearch<MasterBlockDomain>(
                   validator: (value) {
@@ -156,15 +171,33 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
               }, error: (e, s) {
                 return Text('Error: $e');
               }),
-              SizedBox(height: 10.0.sp),
-              OutlinedButton.icon(
-                label: const Text('Upload Foto Peserta'),
-                icon: const Icon(Icons.image),
-                onPressed: () async {
-                  avatarController.text = await doUploadImage(context);
-                },
+              SizedBox(height: 5.0.sp),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  if (imagePreview.value.length > 0)
+                    CircleAvatar(
+                      radius: 50.0,
+                      child: Image.memory(
+                        base64Decode(imagePreview.value),
+                        width: 100.0.sp,
+                        height: 100.0.sp,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    const Icon(Icons.person, size: 100.0),
+                  OutlinedButton.icon(
+                    label: const Text('Upload Foto Peserta'),
+                    icon: const Icon(Icons.image),
+                    onPressed: () async {
+                      avatarController.text = await doUploadImage(context);
+                      imagePreview.value = avatarController.text;
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: 10.0.sp),
+              SizedBox(height: 5.0.sp),
               FilledButton(
                   onPressed: loadingSubmit.value == true
                       ? null
@@ -190,21 +223,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                             );
                           }
                         },
-                  child: loadingSubmit.value
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : const Text('Submit')),
-              Wrap(
-                direction: Axis.vertical,
-                children: [
-                  Text('Nama: ${namaController.text}'),
-                  Text('Tanggal Lahir: ${dobController.text}'),
-                  Text('Gender : ${_character.value == EnumGender.ikhwan ? 'Ikhwan' : 'Akhwat'}'),
-                  Text('Umur: ${calculatedAge.value}'),
-                  Text('Alamat: ${addressController.text}'),
-                ],
-              )
+                  child: loadingSubmit.value ? Center(child: CircularProgressIndicator()) : const Text('Submit')),
             ],
           ),
         ),
