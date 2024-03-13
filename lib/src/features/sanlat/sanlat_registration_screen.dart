@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,6 +61,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   _validate();
                 },
               ),
+              SizedBox(height: 10.0.sp),
               //radio button gender
               Container(
                 color: Colors.grey[200],
@@ -242,18 +244,31 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
 
   Future<String> doUploadImage(BuildContext context) async {
     var result = '';
-    XFile? imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (imageSource != null) {
-      var f = await imageSource.readAsBytes();
-      File photo = File(f.toSet().toString());
-      String fileInBase64 = base64Encode(f);
-      // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
-      final bytes = f.lengthInBytes;
-      print(bytes.toString());
-      if (bytes > 5000000) {
-        showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
-      } else {
-        result = fileInBase64;
+    final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (!kIsWeb) {
+      if (imageSource != null) {
+        var f = await imageSource.readAsBytes();
+        // File photo = File(f.toSet().toString());
+        String fileInBase64 = base64Encode(f);
+        // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
+        final bytes = f.lengthInBytes;
+        print(bytes.toString());
+        if (bytes > 5000000) {
+          showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+        } else {
+          result = fileInBase64;
+        }
+      }
+    } else {
+      if (imageSource != null) {
+        var f = File(imageSource.path);
+        final bytes = f.lengthSync();
+        print(bytes.toString());
+        if (bytes > 5000000) {
+          showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+        } else {
+          result = base64Encode(f.readAsBytesSync());
+        }
       }
     }
     return result;
