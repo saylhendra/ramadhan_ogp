@@ -60,60 +60,6 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
         body: ListView(
           padding: MediaQuery.of(context).padding + EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 20.0.sp),
           children: [
-            infosState.when(
-              data: (datas) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: ExpansionPanelList(
-                    expandIconColor: AppTheme.oldBrick,
-                    expansionCallback: (int index, bool isExpanded) {
-                      isExpandedState.value = isExpanded;
-                    },
-                    animationDuration: const Duration(milliseconds: 500),
-                    elevation: 4.0,
-                    expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                    children: datas.map<ExpansionPanel>((info) {
-                      return ExpansionPanel(
-                        backgroundColor: AppTheme.pinkDown,
-                        isExpanded: isExpandedState.value,
-                        canTapOnHeader: true,
-                        headerBuilder: (context, isExpanded) {
-                          return ListTile(
-                            title: Text('Klik Disini Untuk Lihat Informasi Sanlat'),
-                          );
-                        },
-                        body: Card(
-                          child: ListTile(
-                            subtitle: Wrap(
-                              children: [
-                                Image.memory(
-                                  base64Decode(info['avatar'].toString()),
-                                  fit: BoxFit.cover,
-                                ),
-                                MarkdownBody(
-                                  data: info['content_markdown'].toString(),
-                                  selectable: true,
-                                  onTapLink: (text, href, title) {
-                                    launchInBrowser(href ?? '');
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-              loading: () {
-                return const Center(child: CircularProgressIndicator());
-              },
-              error: (e, s) {
-                return Text('Error: $e');
-              },
-            ),
-            const SizedBox(height: 10.0),
             Card(
               elevation: 4.0,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -127,7 +73,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       TextFormField(
-                        autofocus: true,
+                        autofocus: false,
                         focusNode: FocusNode(),
                         controller: namaController,
                         validator: ValidationBuilder().required('Nama tidak boleh kosong').build(),
@@ -312,6 +258,60 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                   ),
                 ),
               ),
+            ),
+            Divider(),
+            infosState.when(
+              data: (datas) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: ExpansionPanelList(
+                    expandIconColor: AppTheme.oldBrick,
+                    expansionCallback: (int index, bool isExpanded) {
+                      isExpandedState.value = isExpanded;
+                    },
+                    animationDuration: const Duration(milliseconds: 500),
+                    elevation: 4.0,
+                    expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                    children: datas.map<ExpansionPanel>((info) {
+                      return ExpansionPanel(
+                        backgroundColor: AppTheme.pinkDown,
+                        isExpanded: isExpandedState.value,
+                        canTapOnHeader: true,
+                        headerBuilder: (context, isExpanded) {
+                          return ListTile(
+                            title: Text('Klik Disini Untuk Lihat Informasi Sanlat'),
+                          );
+                        },
+                        body: Card(
+                          child: ListTile(
+                            subtitle: Wrap(
+                              children: [
+                                Image.memory(
+                                  base64Decode(info['avatar'].toString()),
+                                  fit: BoxFit.cover,
+                                ),
+                                MarkdownBody(
+                                  data: info['content_markdown'].toString(),
+                                  selectable: true,
+                                  onTapLink: (text, href, title) {
+                                    launchInBrowser(href ?? '');
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+              loading: () {
+                return const Center(child: CircularProgressIndicator());
+              },
+              error: (e, s) {
+                return Text('Error: $e');
+              },
             ),
           ],
         ),
