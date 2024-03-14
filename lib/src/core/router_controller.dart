@@ -7,7 +7,7 @@ import '../features/starter/splash_screen.dart';
 
 final GoRouter routerController = GoRouter(
   routerNeglect: true,
-  initialLocation: '/',
+  // initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',

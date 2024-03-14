@@ -253,6 +253,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                               loadingSubmit.value = false;
                                               ref.invalidate(pesertaSanlatControllerProvider);
                                               context.pushReplacementNamed(HomeScreen.routeName);
+                                              // Future.delayed(const Duration(seconds: 3), () {});
                                             },
                                           );
                                         }

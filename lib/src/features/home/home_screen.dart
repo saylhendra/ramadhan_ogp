@@ -79,7 +79,21 @@ class HomeScreen extends HookConsumerWidget {
                     flex: 0,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                      child: Text('Daftar Peserta Sanlat ${listTmp.length}', style: TextStyle(fontSize: 18.0)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Daftar Peserta Sanlat ${listTmp.length}', style: TextStyle(fontSize: 18.0)),
+                          //refresh button
+                          FilledButton.icon(
+                            label: Text('Refresh'),
+                            icon: Icon(Icons.refresh),
+                            onPressed: () {
+                              ref.invalidate(pesertaSanlatControllerProvider);
+                            },
+                          ),
+                        ],
+                      ),
                     )),
                 //Search box peserta sanlat
                 Expanded(

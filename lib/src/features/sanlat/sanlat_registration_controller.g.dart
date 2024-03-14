@@ -7,7 +7,7 @@ part of 'sanlat_registration_controller.dart';
 // **************************************************************************
 
 String _$sanlatRegistrationControllerHash() =>
-    r'16714d92bf7ff7121387569db2b2c786a2b13f2e';
+    r'1ab7463fd154cf70a32c8fdd64b3996eda17ed07';
 
 /// See also [SanlatRegistrationController].
 @ProviderFor(SanlatRegistrationController)
