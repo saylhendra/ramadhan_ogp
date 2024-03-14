@@ -113,7 +113,6 @@ class HomeScreen extends HookConsumerWidget {
                         } else {
                           listTmp = [...datas];
                         }
-                        log('searching for ${listTmp.length}');
                       },
                     ),
                   ),
@@ -161,13 +160,19 @@ class HomeScreen extends HookConsumerWidget {
 
   Widget getImageBase64(data) {
     var avatar = Container(
-      width: 50.0,
-      height: 50.0,
+      width: 70.0,
+      height: 70.0,
       constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100.0),
           image: DecorationImage(
-            image: data.length > 0 ? MemoryImage(base64Decode(data)) : Image.asset('assets/images/no_image.jpg').image,
+            image: (data != null && data.length > 0)
+                ? MemoryImage(base64Decode(data))
+                : Image.asset(
+                    'assets/images/no_image.jpg',
+                    width: 70.0,
+                    height: 70.0,
+                  ).image,
             fit: BoxFit.cover,
           )),
     );
