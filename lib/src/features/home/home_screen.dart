@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/core/utils.dart';
@@ -17,11 +20,15 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pesertaSanlatState = ref.watch(pesertaSanlatControllerProvider);
     // var myGradient = const LinearGradient(
     //   begin: Alignment.topLeft,
     //   end: Alignment.bottomRight,
     //   colors: [AppTheme.pinkDown, AppTheme.yellowNapes, AppTheme.oldBrick],
     // );
+    final searchController = useTextEditingController();
+    final keyWords = useState('');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Ramadhan OGP 1445 H"),
@@ -42,7 +49,11 @@ class HomeScreen extends HookConsumerWidget {
                 animationDuration: Duration(milliseconds: 300),
               ),
               onPressed: () {
-                context.goNamed(SanlatRegistrationScreen.routeName);
+                if (kIsWeb) {
+                  context.pushNamed(SanlatRegistrationScreen.routeName);
+                } else {
+                  context.pushNamed(SanlatRegistrationScreen.routeName);
+                }
               },
               child: Container(
                 height: 32.0,
@@ -58,39 +69,64 @@ class HomeScreen extends HookConsumerWidget {
         ],
       ),
       drawer: HomeMenuWidget(),
-      body: ref.watch(pesertaSanlatControllerProvider).when(
+      body: pesertaSanlatState.when(
           data: (datas) {
+            var listTmp = [...datas];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                     flex: 0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('Daftar Peserta Sanlat', style: TextStyle(fontSize: 18.0)),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                      child: Text('Daftar Peserta Sanlat ${listTmp.length}', style: TextStyle(fontSize: 18.0)),
                     )),
+                //Search box peserta sanlat
+                Expanded(
+                  flex: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                    child: TextFormField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Cari Peserta Sanlat',
+                      ),
+                      onFieldSubmitted: (value) {
+                        keyWords.value = value;
+                        if (value.length > 3) {
+                          listTmp = datas.where((element) => element['name'].toString().toLowerCase().contains(value.toLowerCase())).toList();
+                        } else {
+                          listTmp = [...datas];
+                        }
+                        log('searching for ${listTmp.length}');
+                      },
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: datas.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                      itemCount: listTmp.length,
                       itemBuilder: (item, index) {
+                        var peserta = listTmp[index];
+                        log('${listTmp.length} | $index');
                         return Card(
                           elevation: 4.0,
                           child: ListTile(
                             title: IntrinsicHeight(
                               child: Row(
                                 children: [
-                                  getImageBase64(datas[index]['avatar']),
+                                  getImageBase64(peserta['avatar']),
                                   VerticalDivider(),
                                   Wrap(
                                     direction: Axis.vertical,
                                     crossAxisAlignment: WrapCrossAlignment.start,
                                     children: [
-                                      Text('${datas[index]['name']} | Block ${datas[index]['remarks']}', style: TextStyle(fontSize: 16.0)),
-                                      Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                      Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                      Text(
-                                          'Mendaftar Pada: ${simpleDateTimeFormat(datas[index]['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                      Text('${peserta['name']} | Block ${peserta['remarks']}', style: TextStyle(fontSize: 16.0)),
+                                      Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                      Text('Alamat: Block ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                      Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
                                           style: TextStyle(fontSize: 12.0)),
                                     ],
                                   ),
