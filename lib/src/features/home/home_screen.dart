@@ -14,7 +14,7 @@ import '../sanlat/peserta_sanlat_detail_screen.dart';
 import '../sanlat/sanlat_registration_screen.dart';
 
 //global key for form
-final formkey = GlobalKey<FormState>(debugLabel: 'search');
+final formkey = GlobalKey<FormState>();
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -151,7 +151,7 @@ class HomeScreen extends HookConsumerWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
                       itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
                       itemBuilder: (item, index) {
                         var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
@@ -173,7 +173,7 @@ class HomeScreen extends HookConsumerWidget {
                                       SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.5,
                                         child: Text(
-                                          '${peserta['name']}${peserta['id']} | Block ${peserta['remarks']}',
+                                          '${peserta['name']} | Block ${peserta['remarks']}',
                                           style: TextStyle(fontSize: 16.0),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,

@@ -132,26 +132,14 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                             onTap: () => showDatePicker(
                               context: context,
                               initialDate: DateTime.now().subtract(Duration(days: 365 * 3)),
-                              firstDate: DateTime(2000),
+                              firstDate: DateTime(1900),
                               lastDate: DateTime.now(),
                             ).then((dt) {
                               if (dt != null) {
                                 dobController.text = DateFormat('EEEE, dd-MMM-yyyy', 'id').format(dt);
                                 dobInsertController.text = DateFormat('yyyy-MM-dd').format(dt);
-                                var age = DateTime.now().subtract(Duration(days: 365)).year - dt.year;
-                                calculatedAge.value = age;
-                                //setfocus on calculatedAgeController
-                                FocusScope.of(context).requestFocus(FocusNode());
-                                var selectedYear = dt.year;
-                                var selectedDay = dt.day;
-                                var selectedMon = dt.month;
-                                DateTime date1 = DateTime(selectedYear, selectedMon, selectedDay);
-                                var diff = DateTime.now().difference(date1);
-                                var days = diff.inDays;
-                                var months = (days / 30).floor();
-                                var remainingDays = days % 30;
-                                calculatedAgeController.text = '$age tahun, $months bulan, $remainingDays hari'.toString();
-                                // calculatedAgeController.text = age.toString();
+                                //menghitung tanggal
+                                calculatedAge.value = calcAge(DateTime.now().toLocal(), dt, calculatedAgeController);
                               }
                             }),
                           ),
@@ -408,6 +396,25 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  int calcAge(DateTime today, DateTime dob, TextEditingController calculatedAgeController) {
+    final year = today.year - dob.year;
+    final mth = today.month - dob.month;
+    final days = today.day - dob.day;
+    if (mth < 0) {
+      /// negative month means it's still upcoming
+      print('you buns is ${year - 1}');
+      print('turning $year in ${mth.abs()} months and $days days');
+      calculatedAgeController.text = '${year - 1} tahun, ${mth.abs()} bulan';
+      return year - 1;
+    } else {
+      //age now
+      print('your age is $year years and ${mth} months and ${days} days');
+      print('your next bday is ${12 - mth}months and ${28 - days} days away');
+      calculatedAgeController.text = '$year tahun, $mth bulan';
+      return year;
+    }
   }
 }
 
