@@ -24,12 +24,12 @@ final sanlatRegistrationControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$SanlatRegistrationController = AutoDisposeAsyncNotifier<void>;
 String _$pesertaSanlatControllerHash() =>
-    r'd737d0b3b6079ba92ebd86bcbc1e6feff4ccbcfc';
+    r'87b26aa9b4d6affd3a6d856127aab2593c2d146a';
 
 /// See also [PesertaSanlatController].
 @ProviderFor(PesertaSanlatController)
-final pesertaSanlatControllerProvider =
-    AsyncNotifierProvider<PesertaSanlatController, List<dynamic>>.internal(
+final pesertaSanlatControllerProvider = AutoDisposeAsyncNotifierProvider<
+    PesertaSanlatController, List<dynamic>>.internal(
   PesertaSanlatController.new,
   name: r'pesertaSanlatControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,6 +39,6 @@ final pesertaSanlatControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$PesertaSanlatController = AsyncNotifier<List<dynamic>>;
+typedef _$PesertaSanlatController = AutoDisposeAsyncNotifier<List<dynamic>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
