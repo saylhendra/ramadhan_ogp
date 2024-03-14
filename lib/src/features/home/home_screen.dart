@@ -274,17 +274,24 @@ class HomeScreen extends HookConsumerWidget {
       height: 70.0,
       constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.0),
-          image: DecorationImage(
-            image: (data != null && data.length > 0)
-                ? MemoryImage(base64Decode(data))
-                : Image.asset(
-                    'assets/images/no_image.jpg',
-                    width: 70.0,
-                    height: 70.0,
-                  ).image,
-            fit: BoxFit.cover,
-          )),
+        borderRadius: BorderRadius.circular(100.0),
+        image: DecorationImage(
+          image: (data != null && data.length > 0)
+              ? MemoryImage(base64Decode(data))
+              : Image.asset(
+                  'assets/images/no_image.jpg',
+                  width: 70.0,
+                  height: 70.0,
+                ).image,
+          fit: BoxFit.cover,
+        ),
+      ),
+      // child: BackdropFilter(
+      //   filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 10.0),
+      //   child: Container(
+      //     decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+      //   ),
+      // ),
     );
     return avatar;
   }
