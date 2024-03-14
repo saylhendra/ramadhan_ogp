@@ -16,7 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.5
-  flutter_markdown: ^0.6.20+1
+  flutter_markdown: ^0.6.21
   flutter_screenutil: ^5.9.0
   form_validator: ^2.1.1
   fpdart: ^1.1.0

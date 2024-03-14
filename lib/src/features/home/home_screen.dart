@@ -17,20 +17,32 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var myGradient = const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [AppTheme.pinkDown, AppTheme.yellowNapes, AppTheme.oldBrick],
-    );
+    // var myGradient = const LinearGradient(
+    //   begin: Alignment.topLeft,
+    //   end: Alignment.bottomRight,
+    //   colors: [AppTheme.pinkDown, AppTheme.yellowNapes, AppTheme.oldBrick],
+    // );
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Orchid Green Park"),
+        title: const Text("Ramadhan OGP 1445 H"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: AppTheme.myGradient,
+          ),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.0),
-            child: FilledButton(
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                backgroundColor: AppTheme.oldBrick,
+                foregroundColor: AppTheme.pinkDown,
+                shadowColor: Colors.black,
+                elevation: 4.0,
+                animationDuration: Duration(milliseconds: 300),
+              ),
               onPressed: () {
-                context.pushNamed(SanlatRegistrationScreen.routeName);
+                context.goNamed(SanlatRegistrationScreen.routeName);
               },
               child: Container(
                 height: 32.0,
@@ -74,12 +86,12 @@ class HomeScreen extends HookConsumerWidget {
                                     direction: Axis.vertical,
                                     crossAxisAlignment: WrapCrossAlignment.start,
                                     children: [
-                                      Text(datas[index]['name'], style: TextStyle(fontSize: 14.0)),
-                                      Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 10.0)),
-                                      Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 10.0)),
+                                      Text('${datas[index]['name']} | Block ${datas[index]['remarks']}', style: TextStyle(fontSize: 16.0)),
+                                      Text('Usia: ${datas[index]['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                      Text('Alamat: Block ${datas[index]['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
                                       Text(
                                           'Mendaftar Pada: ${simpleDateTimeFormat(datas[index]['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                          style: TextStyle(fontSize: 10.0)),
+                                          style: TextStyle(fontSize: 12.0)),
                                     ],
                                   ),
                                 ],

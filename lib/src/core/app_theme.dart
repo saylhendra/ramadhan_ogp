@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  static const white = Color(0xFFFFFFFF);
   static const primary = Color(0xFFE2BE5B);
   static const dark = Color(0xFF051F1F);
   static const black = Color(0xFF1F1F1F);
@@ -12,4 +13,9 @@ class AppTheme {
   static const blackPerl = Color(0xFF041322);
   static const oldBrick = Color(0xFF8F151A);
   static const yellowNapes = Color(0xFFFADA5E);
+  static const myGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [blackPerl, plantation],
+  );
 }

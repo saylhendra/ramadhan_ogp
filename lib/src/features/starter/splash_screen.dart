@@ -16,7 +16,7 @@ class SplashScreen extends HookConsumerWidget {
     useEffect(() {
       Future.delayed(
         Duration(seconds: _delay.value),
-        () => context.pushReplacementNamed(
+        () => context.goNamed(
           HomeScreen.routeName,
         ),
       );

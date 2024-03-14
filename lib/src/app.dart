@@ -28,6 +28,16 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.pinkDown),
             useMaterial3: true,
             fontFamily: GoogleFonts.notoKufiArabic().fontFamily,
+            drawerTheme: const DrawerThemeData(
+              elevation: 4.0,
+              shadowColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(25),
+                  bottomRight: Radius.circular(0),
+                ),
+              ),
+            ),
           ),
           routerConfig: routerController,
         );
