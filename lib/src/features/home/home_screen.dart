@@ -131,9 +131,7 @@ class HomeScreen extends HookConsumerWidget {
                             if (keyWords.value.length > 3) {
                               listTmp.value = [...datas];
                               listTmp.value = listTmp.value.where((peserta) {
-                                return peserta['name'].toLowerCase().trim() == (value.toLowerCase()) ||
-                                    peserta['remarks'].toLowerCase().trim() == (value.toLowerCase()) ||
-                                    peserta['age'].toString().toLowerCase().trim() == (value.toLowerCase());
+                                return peserta['name'].toLowerCase().trim() == (value.toLowerCase());
                               }).toList();
                             } else {
                               formkey.currentState!.validate();
@@ -154,26 +152,31 @@ class HomeScreen extends HookConsumerWidget {
                         var peserta = keyWords.value.length > 2 ? listTmp.value[index] : datas[index];
                         return Card(
                           elevation: 4.0,
-                          child: ListTile(
-                            onTap: () => doOpenDetailPeserta(context, peserta),
-                            title: IntrinsicHeight(
-                              child: Row(
-                                children: [
-                                  getImageBase64(peserta['avatar']),
-                                  VerticalDivider(),
-                                  Wrap(
-                                    direction: Axis.vertical,
-                                    crossAxisAlignment: WrapCrossAlignment.start,
-                                    children: [
-                                      Text('${peserta['name']}${peserta['id']} | Block ${peserta['remarks']}', style: TextStyle(fontSize: 16.0)),
-                                      Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                      Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                      Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                          style: TextStyle(fontSize: 12.0)),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                getImageBase64(peserta['avatar']),
+                                VerticalDivider(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.5,
+                                      child: Text(
+                                        '${peserta['name']}${peserta['id']} | Block ${peserta['remarks']}',
+                                        style: TextStyle(fontSize: 16.0),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                    Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                    Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                        style: TextStyle(fontSize: 12.0)),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );
