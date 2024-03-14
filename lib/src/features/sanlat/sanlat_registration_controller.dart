@@ -34,7 +34,7 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
   }
 }
 
-@Riverpod(keepAlive: false)
+@Riverpod(keepAlive: true)
 class PesertaSanlatController extends _$PesertaSanlatController {
   @override
   FutureOr<List<dynamic>> build() async {

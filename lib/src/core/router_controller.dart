@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/home/home_screen.dart';
+import '../features/sanlat/peserta_sanlat_detail_screen.dart';
 import '../features/sanlat/sanlat_registration_screen.dart';
 import '../features/starter/splash_screen.dart';
 
@@ -26,13 +27,26 @@ final GoRouter routerController = GoRouter(
       },
     ),
     GoRoute(
-      path: '/sanlat-registration-screen',
-      name: SanlatRegistrationScreen.routeName,
-      pageBuilder: (context, state) {
-        return NoTransitionPage(
-          child: const SanlatRegistrationScreen(),
-        );
-      },
-    ),
+        path: '/sanlat-registration-screen',
+        name: SanlatRegistrationScreen.routeName,
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: const SanlatRegistrationScreen(),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'peserta-sanlat-detail-screen',
+            name: PesertaSanlatDetailScreen.routeName,
+            pageBuilder: (context, state) {
+              final peserta = state.extra as Map<String, dynamic>;
+              return NoTransitionPage(
+                child: PesertaSanlatDetailScreen(
+                  peserta: peserta,
+                ),
+              );
+            },
+          ),
+        ]),
   ],
 );

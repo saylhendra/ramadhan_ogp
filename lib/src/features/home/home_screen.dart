@@ -10,6 +10,7 @@ import 'package:ramadhan_ogp/src/features/home/home_menu_widget.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.dart';
 
 import '../../core/app_theme.dart';
+import '../sanlat/peserta_sanlat_detail_screen.dart';
 import '../sanlat/sanlat_registration_screen.dart';
 
 //global key for form
@@ -72,7 +73,7 @@ class HomeScreen extends HookConsumerWidget {
       ),
       drawer: HomeMenuWidget(),
       body: pesertaSanlatState.when(
-          data: (datas) {
+          data: (List<dynamic> datas) {
             datas.sort((b, a) => a['id'].compareTo(b['id']));
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +86,7 @@ class HomeScreen extends HookConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Daftar Peserta Sanlat ${listTmp.value.length}', style: TextStyle(fontSize: 18.0)),
+                          Text('Daftar Peserta Sanlat', style: TextStyle(fontSize: 18.0)),
                           //refresh button
                           FilledButton.icon(
                             label: Text('Refresh'),
@@ -154,6 +155,7 @@ class HomeScreen extends HookConsumerWidget {
                         return Card(
                           elevation: 4.0,
                           child: ListTile(
+                            onTap: () => doOpenDetailPeserta(context, peserta),
                             title: IntrinsicHeight(
                               child: Row(
                                 children: [
@@ -204,5 +206,18 @@ class HomeScreen extends HookConsumerWidget {
           )),
     );
     return avatar;
+  }
+
+  doOpenDetailPeserta(BuildContext context, dynamic peserta) {
+    var paramPeserta = {
+      'id': peserta['id'].toString(),
+      'name': peserta['name'],
+      'age': peserta['age'].toString(),
+      'remarks': peserta['remarks'],
+      'avatar': peserta['avatar'],
+      'created_at': peserta['created_at'],
+    };
+
+    context.pushNamed(PesertaSanlatDetailScreen.routeName, extra: paramPeserta);
   }
 }
