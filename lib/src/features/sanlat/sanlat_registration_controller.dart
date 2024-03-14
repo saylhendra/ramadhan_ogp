@@ -18,21 +18,19 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
     String? avatar,
     required int age,
   }) async {
-    for (int i = 0; i < 5; i++) {
-      await Supabase.instance.client.from('sanlats').upsert([
-        {
-          'name': name + i.toString(),
-          'gender': gender,
-          'age': age + i,
-          'dob': dob,
-          'remarks': address,
-          // 'avatar': avatar ?? '',
-          'created_at': DateTime.now().toLocal(),
-          'updated_at': DateTime.now().toLocal(),
-          'published_at': DateTime.now().toLocal(),
-        }
-      ]);
-    }
+    await Supabase.instance.client.from('sanlats').upsert([
+      {
+        'name': name,
+        'gender': gender,
+        'age': age,
+        'dob': dob,
+        'remarks': address,
+        'avatar': avatar ?? '',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+        'published_at': DateTime.now().toIso8601String(),
+      }
+    ]);
   }
 }
 

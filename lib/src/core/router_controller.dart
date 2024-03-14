@@ -17,7 +17,7 @@ final GoRouter routerController = GoRouter(
       },
     ),
     GoRoute(
-      path: '/portal-ramadhan-ogp',
+      path: '/home-screen',
       name: HomeScreen.routeName,
       pageBuilder: (context, state) {
         return NoTransitionPage(
