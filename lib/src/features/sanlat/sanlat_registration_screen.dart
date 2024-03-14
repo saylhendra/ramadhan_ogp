@@ -44,7 +44,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     var loadingSubmit = useState<bool>(false);
     var avatarController = useTextEditingController();
     var imagePreview = useState<String>('');
-    var isExpandedState = useState<bool>(false);
+    var isExpandedState = useState<bool>(true);
     final listMasterBlock = ref.watch(masterBlockControllerProvider);
     final infosState = ref.watch(infoControllerProvider);
 

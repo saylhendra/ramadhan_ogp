@@ -30,6 +30,7 @@ class HomeScreen extends HookConsumerWidget {
     // );
     final searchController = useTextEditingController();
     final keyWords = useState('');
+    final isShowSearchBox = useState(false);
     var listTmp = useState([]);
 
     return Scaffold(
@@ -75,122 +76,189 @@ class HomeScreen extends HookConsumerWidget {
       body: pesertaSanlatState.when(
           data: (List<dynamic> datas) {
             datas.sort((b, a) => a['id'].compareTo(b['id']));
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return Stack(
+              alignment: Alignment.topRight,
               children: [
-                Expanded(
-                    flex: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Daftar Peserta Sanlat', style: TextStyle(fontSize: 18.0)),
-                          //refresh button
-                          FilledButton.icon(
-                            label: Text('Refresh'),
-                            icon: Icon(Icons.refresh),
-                            onPressed: () {
-                              ref.invalidate(pesertaSanlatControllerProvider);
-                            },
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        flex: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Daftar Peserta Sanlat', style: TextStyle(fontSize: 18.0)),
+                              //refresh button
+                              FilledButton.icon(
+                                label: Text('Refresh'),
+                                icon: Icon(Icons.refresh),
+                                onPressed: () {
+                                  ref.invalidate(pesertaSanlatControllerProvider);
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )),
-                //Search box peserta sanlat
-                Expanded(
-                  flex: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                    child: Form(
-                      key: formkey,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.length < 1 && keyWords.value.isNotEmpty) {
-                            return 'Kata kunci minimal 3 karakter';
-                          }
-                          return null;
-                        },
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Cari nama, alamat, usia...',
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              searchController.clear();
-                              keyWords.value = '';
-                              // listTmp.value = [...datas];
-                            },
-                            icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
-                          ),
-                        ),
-                        onFieldSubmitted: (value) {
-                          keyWords.value = value;
-                          if (keyWords.value.isNotEmpty) {
-                            if (keyWords.value.length > 1) {
-                              listTmp.value = [...datas];
-                              // listTmp.value = datas.where((peserta) {
-                              //   return peserta['name'].toLowerCase().trim() == (value.toLowerCase());
-                              // }).toList();
-                              listTmp.value = datas.where((peserta) {
-                                return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
-                                    peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
-                                    peserta['age'].toString().contains(value.toLowerCase());
-                              }).toList();
-                            } else {
-                              formkey.currentState!.validate();
-                            }
-                          } else {
-                            formkey.currentState!.validate();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
-                      itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
-                      itemBuilder: (item, index) {
-                        var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
-                        return InkWell(
-                          onTap: () {
-                            doOpenDetailPeserta(context, peserta);
-                          },
-                          child: Card(
-                            elevation: 4.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  getImageBase64(peserta['avatar']),
-                                  VerticalDivider(),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                        )),
+                    //Search box peserta sanlat
+                    // Expanded(
+                    //   flex: 0,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                    //     child: Form(
+                    //       key: formkey,
+                    //       child: TextFormField(
+                    //         validator: (value) {
+                    //           if (value!.length < 1 && keyWords.value.isNotEmpty) {
+                    //             return 'Kata kunci minimal 3 karakter';
+                    //           }
+                    //           return null;
+                    //         },
+                    //         controller: searchController,
+                    //         decoration: InputDecoration(
+                    //           border: OutlineInputBorder(),
+                    //           labelText: 'Cari nama, alamat, usia...',
+                    //           suffixIcon: IconButton(
+                    //             onPressed: () {
+                    //               searchController.clear();
+                    //               keyWords.value = '';
+                    //               // listTmp.value = [...datas];
+                    //             },
+                    //             icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
+                    //           ),
+                    //         ),
+                    //         onFieldSubmitted: (value) {
+                    //           keyWords.value = value;
+                    //           if (keyWords.value.isNotEmpty) {
+                    //             if (keyWords.value.length > 1) {
+                    //               listTmp.value = [...datas];
+                    //               listTmp.value = datas.where((peserta) {
+                    //                 return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
+                    //                     peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
+                    //                     peserta['age'].toString().contains(value.toLowerCase());
+                    //               }).toList();
+                    //             } else {
+                    //               formkey.currentState!.validate();
+                    //             }
+                    //           } else {
+                    //             formkey.currentState!.validate();
+                    //           }
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    Expanded(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
+                          itemBuilder: (item, index) {
+                            var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
+                            return InkWell(
+                              onTap: () {
+                                doOpenDetailPeserta(context, peserta);
+                              },
+                              child: Card(
+                                elevation: 4.0,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
                                     children: [
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.5,
-                                        child: Text(
-                                          '${peserta['name']} | Block ${peserta['remarks']}',
-                                          style: TextStyle(fontSize: 16.0),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                      getImageBase64(peserta['avatar']),
+                                      VerticalDivider(),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.5,
+                                            child: Text(
+                                              '${peserta['name']} | Block ${peserta['remarks']}',
+                                              style: TextStyle(fontSize: 16.0),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                          Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                          Text(
+                                              'Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                              style: TextStyle(fontSize: 12.0)),
+                                        ],
                                       ),
-                                      Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                      Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                      Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                          style: TextStyle(fontSize: 12.0)),
                                     ],
                                   ),
-                                ],
+                                ),
+                              ),
+                            );
+                          }),
+                    )
+                  ],
+                ),
+                InkWell(
+                  onTap: () {
+                    isShowSearchBox.value = !isShowSearchBox.value;
+                  },
+                  child: Positioned(
+                    right: 10.0,
+                    top: 10.0,
+                    child: isShowSearchBox.value
+                        ? Container(
+                            color: AppTheme.white,
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            width: MediaQuery.of(context).size.width * 1.0,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                              child: Form(
+                                key: formkey,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value!.length < 1 && keyWords.value.isNotEmpty) {
+                                      return 'Kata kunci minimal 3 karakter';
+                                    }
+                                    return null;
+                                  },
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Cari nama, alamat, usia...',
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        searchController.clear();
+                                        keyWords.value = '';
+                                        // listTmp.value = [...datas];
+                                        isShowSearchBox.value = false;
+                                      },
+                                      icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
+                                    ),
+                                  ),
+                                  onFieldSubmitted: (value) {
+                                    keyWords.value = value;
+                                    if (keyWords.value.isNotEmpty) {
+                                      if (keyWords.value.length > 1) {
+                                        listTmp.value = [...datas];
+                                        listTmp.value = datas.where((peserta) {
+                                          return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
+                                              peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
+                                              peserta['age'].toString().contains(value.toLowerCase());
+                                        }).toList();
+                                      } else {
+                                        formkey.currentState!.validate();
+                                      }
+                                    } else {
+                                      formkey.currentState!.validate();
+                                    }
+                                  },
+                                ),
                               ),
                             ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                            child: CircleAvatar(child: Icon(Icons.search)),
                           ),
-                        );
-                      }),
+                  ),
                 )
               ],
             );
