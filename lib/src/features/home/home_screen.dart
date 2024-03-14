@@ -107,7 +107,7 @@ class HomeScreen extends HookConsumerWidget {
                       key: formkey,
                       child: TextFormField(
                         validator: (value) {
-                          if (value!.length < 3 && keyWords.value.isNotEmpty) {
+                          if (value!.length < 1 && keyWords.value.isNotEmpty) {
                             return 'Kata kunci minimal 3 karakter';
                           }
                           return null;
@@ -120,18 +120,23 @@ class HomeScreen extends HookConsumerWidget {
                             onPressed: () {
                               searchController.clear();
                               keyWords.value = '';
-                              listTmp.value = [...datas];
+                              // listTmp.value = [...datas];
                             },
-                            icon: keyWords.value.length > 0 ? Icon(Icons.clear) : Icon(Icons.search),
+                            icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
                           ),
                         ),
-                        onChanged: (value) {
+                        onFieldSubmitted: (value) {
                           keyWords.value = value;
                           if (keyWords.value.isNotEmpty) {
-                            if (keyWords.value.length > 3) {
+                            if (keyWords.value.length > 1) {
                               listTmp.value = [...datas];
-                              listTmp.value = listTmp.value.where((peserta) {
-                                return peserta['name'].toLowerCase().trim() == (value.toLowerCase());
+                              // listTmp.value = datas.where((peserta) {
+                              //   return peserta['name'].toLowerCase().trim() == (value.toLowerCase());
+                              // }).toList();
+                              listTmp.value = datas.where((peserta) {
+                                return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
+                                    peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
+                                    peserta['age'].toString().contains(value.toLowerCase());
                               }).toList();
                             } else {
                               formkey.currentState!.validate();
@@ -147,36 +152,41 @@ class HomeScreen extends HookConsumerWidget {
                 Expanded(
                   child: ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                      itemCount: keyWords.value.length > 2 ? listTmp.value.length : datas.length,
+                      itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
                       itemBuilder: (item, index) {
-                        var peserta = keyWords.value.length > 2 ? listTmp.value[index] : datas[index];
-                        return Card(
-                          elevation: 4.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                getImageBase64(peserta['avatar']),
-                                VerticalDivider(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.5,
-                                      child: Text(
-                                        '${peserta['name']}${peserta['id']} | Block ${peserta['remarks']}',
-                                        style: TextStyle(fontSize: 16.0),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                        var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
+                        return InkWell(
+                          onTap: () {
+                            doOpenDetailPeserta(context, peserta);
+                          },
+                          child: Card(
+                            elevation: 4.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  getImageBase64(peserta['avatar']),
+                                  VerticalDivider(),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.5,
+                                        child: Text(
+                                          '${peserta['name']}${peserta['id']} | Block ${peserta['remarks']}',
+                                          style: TextStyle(fontSize: 16.0),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ),
-                                    Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                    Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                    Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                        style: TextStyle(fontSize: 12.0)),
-                                  ],
-                                ),
-                              ],
+                                      Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                      Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                      Text('Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                          style: TextStyle(fontSize: 12.0)),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
