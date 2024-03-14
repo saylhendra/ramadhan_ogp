@@ -7,10 +7,10 @@ import '../features/starter/splash_screen.dart';
 
 final GoRouter routerController = GoRouter(
   routerNeglect: true,
-  initialLocation: '/splash',
+  initialLocation: '/',
   routes: [
     GoRoute(
-      path: '/splash',
+      path: '/',
       name: SplashScreen.routeName,
       builder: (BuildContext context, GoRouterState state) {
         return const SplashScreen();
