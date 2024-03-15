@@ -199,8 +199,8 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                               if (imagePreview.value.length > 0)
                                 CircleAvatar(
                                   radius: 50.0,
-                                  child: Image.memory(
-                                    base64Decode(imagePreview.value),
+                                  child: Image.network(
+                                    imagePreview.value,
                                     width: 100.0.sp,
                                     height: 100.0.sp,
                                     fit: BoxFit.cover,
@@ -217,11 +217,10 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                       // avatarController.text = await doUploadImage(context);
                                       avatarController.text = await doUploadImageToFirebase(context, namaController.text);
                                       // await doUploadImageToFirebase(context, namaController.text);
-                                      //   imagePreview.value = avatarController.text;
+                                      imagePreview.value = avatarController.text;
                                     },
                                     // onPressed: null,
                                   ),
-                                  Text('Mohon maaf, sementara waktu upload file kami nonaktifkan')
                                 ],
                               ),
                             ],
