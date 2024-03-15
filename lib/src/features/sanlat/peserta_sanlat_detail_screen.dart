@@ -26,13 +26,12 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
         children: [
           Card(
             child: ListTile(
-              title: Text(peserta['name']),
+              title: Text('Nama: ${peserta['name']}'),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(peserta['remarks']),
-                  Text('Usia'),
-                  Text(peserta['age']),
+                  Text('Alamat: ${peserta['remarks']}'),
+                  Text('Usia: ${peserta['age']} tahun'),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width * 0.5,

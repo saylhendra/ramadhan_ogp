@@ -132,7 +132,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                             onTap: () => showDatePicker(
                               context: context,
                               initialDate: DateTime.now().subtract(Duration(days: 365 * 3)),
-                              firstDate: DateTime(1900),
+                              firstDate: DateTime(2000),
                               lastDate: DateTime.now(),
                             ).then((dt) {
                               if (dt != null) {
@@ -319,21 +319,21 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     if (didPop) {
       showDialog(
         context: context,
-        builder: (context) {
+        builder: (dcontext) {
           return AlertDialog(
             title: const Text('Konfirmasi'),
             content: const Text('Apakah Anda yakin ingin kembali?'),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(dcontext).pop();
                 },
                 child: const Text('Tidak'),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  context.goNamed(HomeScreen.routeName);
+                  Navigator.of(dcontext).pop();
                 },
                 child: const Text('Ya'),
               ),

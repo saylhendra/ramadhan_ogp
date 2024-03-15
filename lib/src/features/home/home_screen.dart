@@ -196,70 +196,70 @@ class HomeScreen extends HookConsumerWidget {
                     )
                   ],
                 ),
-                InkWell(
-                  onTap: () {
-                    isShowSearchBox.value = !isShowSearchBox.value;
-                  },
-                  child: Positioned(
-                    right: 10.0,
-                    top: 10.0,
-                    child: isShowSearchBox.value
-                        ? Container(
-                            color: AppTheme.white,
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            width: MediaQuery.of(context).size.width * 1.0,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                              child: Form(
-                                key: formkey,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value!.length < 1 && keyWords.value.isNotEmpty) {
-                                      return 'Kata kunci minimal 3 karakter';
-                                    }
-                                    return null;
-                                  },
-                                  controller: searchController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Cari nama, alamat, usia...',
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        searchController.clear();
-                                        keyWords.value = '';
-                                        // listTmp.value = [...datas];
-                                        isShowSearchBox.value = false;
-                                      },
-                                      icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
-                                    ),
-                                  ),
-                                  onFieldSubmitted: (value) {
-                                    keyWords.value = value;
-                                    if (keyWords.value.isNotEmpty) {
-                                      if (keyWords.value.length > 1) {
-                                        listTmp.value = [...datas];
-                                        listTmp.value = datas.where((peserta) {
-                                          return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
-                                              peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
-                                              peserta['age'].toString().contains(value.toLowerCase());
-                                        }).toList();
-                                      } else {
-                                        formkey.currentState!.validate();
-                                      }
-                                    } else {
-                                      formkey.currentState!.validate();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                            child: CircleAvatar(child: Icon(Icons.search)),
-                          ),
-                  ),
-                )
+                // InkWell(
+                //   onTap: () {
+                //     isShowSearchBox.value = !isShowSearchBox.value;
+                //   },
+                //   child: Positioned(
+                //     right: 10.0,
+                //     top: 10.0,
+                //     child: isShowSearchBox.value
+                //         ? Container(
+                //             color: AppTheme.white,
+                //             margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                //             width: MediaQuery.of(context).size.width * 1.0,
+                //             child: Padding(
+                //               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                //               child: Form(
+                //                 key: formkey,
+                //                 child: TextFormField(
+                //                   validator: (value) {
+                //                     if (value!.length < 1 && keyWords.value.isNotEmpty) {
+                //                       return 'Kata kunci minimal 3 karakter';
+                //                     }
+                //                     return null;
+                //                   },
+                //                   controller: searchController,
+                //                   decoration: InputDecoration(
+                //                     border: OutlineInputBorder(),
+                //                     labelText: 'Cari nama, alamat, usia...',
+                //                     suffixIcon: IconButton(
+                //                       onPressed: () {
+                //                         searchController.clear();
+                //                         keyWords.value = '';
+                //                         // listTmp.value = [...datas];
+                //                         isShowSearchBox.value = false;
+                //                       },
+                //                       icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
+                //                     ),
+                //                   ),
+                //                   onFieldSubmitted: (value) {
+                //                     keyWords.value = value;
+                //                     if (keyWords.value.isNotEmpty) {
+                //                       if (keyWords.value.length > 1) {
+                //                         listTmp.value = [...datas];
+                //                         listTmp.value = datas.where((peserta) {
+                //                           return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
+                //                               peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
+                //                               peserta['age'].toString().contains(value.toLowerCase());
+                //                         }).toList();
+                //                       } else {
+                //                         formkey.currentState!.validate();
+                //                       }
+                //                     } else {
+                //                       formkey.currentState!.validate();
+                //                     }
+                //                   },
+                //                 ),
+                //               ),
+                //             ),
+                //           )
+                //         : Padding(
+                //             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                //             child: CircleAvatar(child: Icon(Icons.search)),
+                //           ),
+                //   ),
+                // )
               ],
             );
           },
