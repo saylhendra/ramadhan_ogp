@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916988200402",
+    "project_id": "ramadhan-ogp",
+    "storage_bucket": "ramadhan-ogp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916988200402:android:ebaa3bda135a1cda50740b",
+        "android_client_info": {
+          "package_name": "com.ogp.ramadhan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdddm037CWlTdOuUj5rXwwPW5hfXtgtkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

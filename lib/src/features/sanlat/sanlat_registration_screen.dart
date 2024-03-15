@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -212,11 +213,13 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                   OutlinedButton.icon(
                                     label: const Text('Upload Foto Peserta'),
                                     icon: const Icon(Icons.image),
-                                    // onPressed: () async {
-                                    //   avatarController.text = await doUploadImage(context);
-                                    //   imagePreview.value = avatarController.text;
-                                    // },
-                                    onPressed: null,
+                                    onPressed: () async {
+                                      // avatarController.text = await doUploadImage(context);
+                                      avatarController.text = await doUploadImageToFirebase(context, namaController.text);
+                                      // await doUploadImageToFirebase(context, namaController.text);
+                                      //   imagePreview.value = avatarController.text;
+                                    },
+                                    // onPressed: null,
                                   ),
                                   Text('Mohon maaf, sementara waktu upload file kami nonaktifkan')
                                 ],
@@ -382,6 +385,36 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
       }
     }
     return result;
+  }
+
+  Future<String> doUploadImageToFirebase(BuildContext context, String paramFileName) async {
+    var firebaseUrl = '';
+    final imageSource = await ImagePickerWeb.getImageAsBytes();
+    if (imageSource != null) {
+      var f = imageSource;
+      var fileName = 'sanlat_$paramFileName${DateTime.now().millisecondsSinceEpoch}';
+      final bytes = f.lengthInBytes;
+      if (bytes > 3000000) {
+        showAlertDialog(context, 'Maaf, ukuran file terlalu besar, maksimal 3Mb');
+      } else {
+        // Create a Reference to the file
+        Reference ref = FirebaseStorage.instance.ref().child('peserta-sanlats').child('/$fileName.jpg');
+        final metadata = SettableMetadata(
+          contentType: 'image/jpeg',
+          // customMetadata: {'picked-file-path': file.relativePath ?? ''},
+          contentEncoding: 'base64',
+        );
+        UploadTask uploadTask = ref.putData(await f, metadata);
+        var dowurl = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+        firebaseUrl = dowurl;
+      }
+      // if (kIsWeb) {
+      //   uploadTask = ref.putData(await file.readAsBytes(), metadata);
+      // } else {
+      //   uploadTask = ref.putFile(io.File(file.path), metadata);
+      // }
+    }
+    return firebaseUrl;
   }
 
   void showAlertDialog(BuildContext context, String s) {
