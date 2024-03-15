@@ -101,53 +101,53 @@ class HomeScreen extends HookConsumerWidget {
                           ),
                         )),
                     //Search box peserta sanlat
-                    // Expanded(
-                    //   flex: 0,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                    //     child: Form(
-                    //       key: formkey,
-                    //       child: TextFormField(
-                    //         validator: (value) {
-                    //           if (value!.length < 1 && keyWords.value.isNotEmpty) {
-                    //             return 'Kata kunci minimal 3 karakter';
-                    //           }
-                    //           return null;
-                    //         },
-                    //         controller: searchController,
-                    //         decoration: InputDecoration(
-                    //           border: OutlineInputBorder(),
-                    //           labelText: 'Cari nama, alamat, usia...',
-                    //           suffixIcon: IconButton(
-                    //             onPressed: () {
-                    //               searchController.clear();
-                    //               keyWords.value = '';
-                    //               // listTmp.value = [...datas];
-                    //             },
-                    //             icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
-                    //           ),
-                    //         ),
-                    //         onFieldSubmitted: (value) {
-                    //           keyWords.value = value;
-                    //           if (keyWords.value.isNotEmpty) {
-                    //             if (keyWords.value.length > 1) {
-                    //               listTmp.value = [...datas];
-                    //               listTmp.value = datas.where((peserta) {
-                    //                 return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
-                    //                     peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
-                    //                     peserta['age'].toString().contains(value.toLowerCase());
-                    //               }).toList();
-                    //             } else {
-                    //               formkey.currentState!.validate();
-                    //             }
-                    //           } else {
-                    //             formkey.currentState!.validate();
-                    //           }
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    Expanded(
+                      flex: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                        child: Form(
+                          key: formkey,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value!.length < 1 && keyWords.value.isNotEmpty) {
+                                return 'Kata kunci minimal 3 karakter';
+                              }
+                              return null;
+                            },
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Cari nama, alamat, usia...',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  searchController.clear();
+                                  keyWords.value = '';
+                                  // listTmp.value = [...datas];
+                                },
+                                icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
+                              ),
+                            ),
+                            onFieldSubmitted: (value) {
+                              keyWords.value = value;
+                              if (keyWords.value.isNotEmpty) {
+                                if (keyWords.value.length > 1) {
+                                  listTmp.value = [...datas];
+                                  listTmp.value = datas.where((peserta) {
+                                    return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
+                                        peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
+                                        peserta['age'].toString().contains(value.toLowerCase());
+                                  }).toList();
+                                } else {
+                                  formkey.currentState!.validate();
+                                }
+                              } else {
+                                formkey.currentState!.validate();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
@@ -162,29 +162,61 @@ class HomeScreen extends HookConsumerWidget {
                                 elevation: 4.0,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
                                     children: [
-                                      getImageBase64(peserta['avatar']),
-                                      VerticalDivider(),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.5,
-                                            child: Text(
-                                              '${peserta['name']} | Block ${peserta['remarks']}',
-                                              style: TextStyle(fontSize: 16.0),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                          getImageBase64(peserta['avatar']),
+                                          VerticalDivider(),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.5,
+                                                child: Text(
+                                                  '${peserta['name']} | ${peserta['remarks']}\n${peserta['gender']}',
+                                                  style: TextStyle(fontSize: 16.0),
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                              Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                              Text(
+                                                  'Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                                  style: TextStyle(fontSize: 12.0)),
+                                            ],
                                           ),
-                                          Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                          Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                          Text(
-                                              'Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                              style: TextStyle(fontSize: 12.0)),
                                         ],
                                       ),
+                                      Visibility(
+                                        //visible if age is 8 or above
+                                        visible: peserta['age'] >= 8,
+                                        child: OutlinedButton(
+                                          //onHover show tooltip
+                                          onHover: (value) {
+                                            if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
+                                          },
+                                          onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
+                                          style: OutlinedButton.styleFrom(
+                                            backgroundColor: AppTheme.oldBrick,
+                                            foregroundColor: AppTheme.pinkDown,
+                                            shadowColor: Colors.black,
+                                            elevation: 4.0,
+                                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                                            animationDuration: Duration(milliseconds: 300),
+                                          ),
+                                          onPressed: () {
+                                            context.pushNamed(SanlatRegistrationScreen.routeName);
+                                          },
+                                          child: Text(
+                                            'Daftarkan\nKuis?',
+                                            style: TextStyle(fontSize: 11.0),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -300,6 +332,7 @@ class HomeScreen extends HookConsumerWidget {
     var paramPeserta = {
       'id': peserta['id'].toString(),
       'name': peserta['name'],
+      'gender': peserta['gender'],
       'age': peserta['age'].toString(),
       'remarks': peserta['remarks'],
       'avatar': peserta['avatar'],
@@ -307,6 +340,18 @@ class HomeScreen extends HookConsumerWidget {
     };
 
     context.pushNamed(PesertaSanlatDetailScreen.routeName, extra: paramPeserta);
+  }
+
+  void showTooltip(BuildContext context, String s, String t) {
+    final snackBar = SnackBar(
+      content: Text(s),
+      action: SnackBarAction(
+        label: t,
+        onPressed: () {},
+      ),
+    );
+    //show snackbar with duration
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 

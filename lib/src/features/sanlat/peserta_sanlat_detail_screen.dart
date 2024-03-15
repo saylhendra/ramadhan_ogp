@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,6 +28,7 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('Jns. Kelamin: ${peserta['gender']}'),
                   Text('Alamat: ${peserta['remarks']}'),
                   Text('Usia: ${peserta['age']} tahun'),
                   Container(
@@ -38,12 +37,7 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
                     margin: const EdgeInsets.only(top: 10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                          image: MemoryImage(
-                            base64Decode(peserta['avatar']),
-                            scale: 1.0,
-                          ),
-                          fit: BoxFit.cover),
+                      image: DecorationImage(image: NetworkImage(peserta['avatar'], scale: 1.0), fit: BoxFit.fitHeight),
                     ),
                   ),
                 ],
