@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/core/utils.dart';
 import 'package:ramadhan_ogp/src/features/home/home_menu_widget.dart';
+import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.dart';
 
 import '../../core/app_theme.dart';
@@ -190,33 +191,50 @@ class HomeScreen extends HookConsumerWidget {
                                           ),
                                         ],
                                       ),
-                                      Visibility(
-                                        //visible if age is 8 or above
-                                        visible: peserta['age'] >= 8,
-                                        child: OutlinedButton(
-                                          //onHover show tooltip
-                                          onHover: (value) {
-                                            if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
-                                          },
-                                          onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
-                                          style: OutlinedButton.styleFrom(
-                                            backgroundColor: AppTheme.oldBrick,
-                                            foregroundColor: AppTheme.pinkDown,
-                                            shadowColor: Colors.black,
-                                            elevation: 4.0,
-                                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                                            animationDuration: Duration(milliseconds: 300),
+                                      if (peserta['is_quiz_registered'] != null && peserta['is_quiz_registered'] == true)
+                                        Chip(
+                                            label: Text('✅ Terdaftar Kuis', style: TextStyle(fontSize: 10.0)),
+                                            backgroundColor: AppTheme.plantation,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: AppTheme.pinkDown)),
+                                            labelStyle: TextStyle(color: AppTheme.pinkDown))
+                                      else
+                                        Visibility(
+                                          //visible if age is 8 or above
+                                          visible: peserta['age'] >= 8,
+                                          child: OutlinedButton(
+                                            //onHover show tooltip
+                                            onHover: (value) {
+                                              if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
+                                            },
+                                            onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
+                                            style: OutlinedButton.styleFrom(
+                                              backgroundColor: AppTheme.oldBrick,
+                                              foregroundColor: AppTheme.pinkDown,
+                                              shadowColor: Colors.black,
+                                              elevation: 4.0,
+                                              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                                              animationDuration: Duration(milliseconds: 300),
+                                            ),
+                                            onPressed: () {
+                                              context.pushNamed(
+                                                SanlatQuizRegistrationScreen.routeName,
+                                                extra: {
+                                                  'id': peserta['id'].toString(),
+                                                  'name': peserta['name'],
+                                                  'avatar': peserta['avatar'],
+                                                  'age': peserta['age'].toString(),
+                                                  'remarks': peserta['remarks'] ?? '-',
+                                                },
+                                              );
+                                            },
+                                            child: Text(
+                                              'Daftarkan\nKuis?',
+                                              style: TextStyle(fontSize: 11.0),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            context.pushNamed(SanlatRegistrationScreen.routeName);
-                                          },
-                                          child: Text(
-                                            'Daftarkan\nKuis?',
-                                            style: TextStyle(fontSize: 11.0),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      )
+                                        )
                                     ],
                                   ),
                                 ),
@@ -226,70 +244,6 @@ class HomeScreen extends HookConsumerWidget {
                     )
                   ],
                 ),
-                // InkWell(
-                //   onTap: () {
-                //     isShowSearchBox.value = !isShowSearchBox.value;
-                //   },
-                //   child: Positioned(
-                //     right: 10.0,
-                //     top: 10.0,
-                //     child: isShowSearchBox.value
-                //         ? Container(
-                //             color: AppTheme.white,
-                //             margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                //             width: MediaQuery.of(context).size.width * 1.0,
-                //             child: Padding(
-                //               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                //               child: Form(
-                //                 key: formkey,
-                //                 child: TextFormField(
-                //                   validator: (value) {
-                //                     if (value!.length < 1 && keyWords.value.isNotEmpty) {
-                //                       return 'Kata kunci minimal 3 karakter';
-                //                     }
-                //                     return null;
-                //                   },
-                //                   controller: searchController,
-                //                   decoration: InputDecoration(
-                //                     border: OutlineInputBorder(),
-                //                     labelText: 'Cari nama, alamat, usia...',
-                //                     suffixIcon: IconButton(
-                //                       onPressed: () {
-                //                         searchController.clear();
-                //                         keyWords.value = '';
-                //                         // listTmp.value = [...datas];
-                //                         isShowSearchBox.value = false;
-                //                       },
-                //                       icon: keyWords.value.length > 1 ? Icon(Icons.clear) : Icon(Icons.search),
-                //                     ),
-                //                   ),
-                //                   onFieldSubmitted: (value) {
-                //                     keyWords.value = value;
-                //                     if (keyWords.value.isNotEmpty) {
-                //                       if (keyWords.value.length > 1) {
-                //                         listTmp.value = [...datas];
-                //                         listTmp.value = datas.where((peserta) {
-                //                           return peserta['name'].toLowerCase().contains(value.toLowerCase()) ||
-                //                               peserta['remarks'].toLowerCase().contains(value.toLowerCase()) ||
-                //                               peserta['age'].toString().contains(value.toLowerCase());
-                //                         }).toList();
-                //                       } else {
-                //                         formkey.currentState!.validate();
-                //                       }
-                //                     } else {
-                //                       formkey.currentState!.validate();
-                //                     }
-                //                   },
-                //                 ),
-                //               ),
-                //             ),
-                //           )
-                //         : Padding(
-                //             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                //             child: CircleAvatar(child: Icon(Icons.search)),
-                //           ),
-                //   ),
-                // )
               ],
             );
           },

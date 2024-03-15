@@ -32,6 +32,13 @@ class SanlatRegistrationController extends _$SanlatRegistrationController {
       }
     ]);
   }
+
+  Future<void> doSubmitQuizSanlat({required idUser}) async {
+    await Supabase.instance.client.from('sanlats').update({
+      'is_quiz_registered': true,
+      'updated_at': DateTime.now().toIso8601String(),
+    }).eq('id', idUser);
+  }
 }
 
 @Riverpod(keepAlive: true)

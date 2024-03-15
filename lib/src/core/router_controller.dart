@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 
 import '../features/home/home_screen.dart';
 import '../features/sanlat/peserta_sanlat_detail_screen.dart';
@@ -48,5 +49,17 @@ final GoRouter routerController = GoRouter(
             },
           ),
         ]),
+    GoRoute(
+      path: '/sanlat-quiz-registration-screen',
+      name: SanlatQuizRegistrationScreen.routeName,
+      pageBuilder: (context, state) {
+        final peserta = state.extra as Map<String, dynamic>;
+        return NoTransitionPage(
+          child: SanlatQuizRegistrationScreen(
+            peserta: peserta,
+          ),
+        );
+      },
+    ),
   ],
 );
