@@ -207,13 +207,19 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                 )
                               else
                                 const Icon(Icons.person, size: 100.0),
-                              OutlinedButton.icon(
-                                label: const Text('Upload Foto Peserta'),
-                                icon: const Icon(Icons.image),
-                                onPressed: () async {
-                                  avatarController.text = await doUploadImage(context);
-                                  imagePreview.value = avatarController.text;
-                                },
+                              Wrap(
+                                children: [
+                                  OutlinedButton.icon(
+                                    label: const Text('Upload Foto Peserta'),
+                                    icon: const Icon(Icons.image),
+                                    // onPressed: () async {
+                                    //   avatarController.text = await doUploadImage(context);
+                                    //   imagePreview.value = avatarController.text;
+                                    // },
+                                    onPressed: null,
+                                  ),
+                                  Text('Mohon maaf, sementara waktu upload file kami nonaktifkan')
+                                ],
                               ),
                             ],
                           ),
@@ -230,7 +236,7 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                               .read(sanlatRegistrationControllerProvider.notifier)
                                               .doSubmitRegistration(
                                                 age: calculatedAge.value,
-                                                gender: _character == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
+                                                gender: _character.value == EnumGender.ikhwan ? 'IKHWAN' : 'AKHWAT',
                                                 name: namaController.text,
                                                 avatar: avatarController.text,
                                                 dob: dobInsertController.text,
