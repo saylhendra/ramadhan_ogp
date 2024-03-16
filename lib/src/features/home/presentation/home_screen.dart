@@ -11,6 +11,7 @@ import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.
 import '../../../core/app_theme.dart';
 import '../../sanlat/peserta_sanlat_detail_screen.dart';
 import '../../sanlat/sanlat_registration_screen.dart';
+import 'widgets/align_widget.dart';
 
 //global key for form
 final formkey = GlobalKey<FormState>();
@@ -105,7 +106,7 @@ class HomeScreen extends HookConsumerWidget {
                     Expanded(
                       flex: 0,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: Form(
                           key: formkey,
                           child: TextFormField(
@@ -151,7 +152,7 @@ class HomeScreen extends HookConsumerWidget {
                     ),
                     Expanded(
                       child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
                           itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
                           itemBuilder: (item, index) {
                             var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
@@ -159,83 +160,86 @@ class HomeScreen extends HookConsumerWidget {
                               onTap: () {
                                 doOpenDetailPeserta(context, peserta);
                               },
-                              child: Card(
-                                elevation: 4.0,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          getImageBase64(peserta['avatar']),
-                                          VerticalDivider(),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.35,
-                                                child: Text(
-                                                  '${peserta['name']} | ${peserta['remarks']}\n${peserta['gender']}',
-                                                  style: TextStyle(fontSize: 16.0),
-                                                  maxLines: 3,
-                                                  overflow: TextOverflow.ellipsis,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+                                child: Card(
+                                  elevation: 4.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Stack(
+                                      alignment: Alignment.topRight,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            getImageBase64(peserta['avatar']),
+                                            VerticalDivider(),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.35,
+                                                  child: Text(
+                                                    '${peserta['name']} | ${peserta['remarks']}\n${peserta['gender']}',
+                                                    style: TextStyle(fontSize: 16.0),
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 ),
+                                                Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
+                                                Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
+                                                Text(
+                                                    'Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
+                                                    style: TextStyle(fontSize: 12.0)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        if (peserta['is_quiz_registered'] != null && peserta['is_quiz_registered'] == true)
+                                          Chip(
+                                              label: Text('✅ Terdaftar Kuis', style: TextStyle(fontSize: 10.0)),
+                                              backgroundColor: AppTheme.plantation,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: AppTheme.pinkDown)),
+                                              labelStyle: TextStyle(color: AppTheme.pinkDown))
+                                        else
+                                          Visibility(
+                                            //visible if age is 8 or above
+                                            visible: peserta['age'] >= 8,
+                                            child: OutlinedButton(
+                                              //onHover show tooltip
+                                              onHover: (value) {
+                                                if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
+                                              },
+                                              onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: AppTheme.oldBrick,
+                                                foregroundColor: AppTheme.pinkDown,
+                                                shadowColor: Colors.black,
+                                                elevation: 4.0,
+                                                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                                                animationDuration: Duration(milliseconds: 300),
                                               ),
-                                              Text('Usia: ${peserta['age']} tahun', style: TextStyle(fontSize: 12.0)),
-                                              Text('Alamat: ${peserta['remarks'] ?? '-'}', style: TextStyle(fontSize: 12.0)),
-                                              Text(
-                                                  'Mendaftar Pada: ${simpleDateTimeFormat(peserta['created_at'] ?? DateTime.now().toLocal().toString())}',
-                                                  style: TextStyle(fontSize: 12.0)),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      if (peserta['is_quiz_registered'] != null && peserta['is_quiz_registered'] == true)
-                                        Chip(
-                                            label: Text('✅ Terdaftar Kuis', style: TextStyle(fontSize: 10.0)),
-                                            backgroundColor: AppTheme.plantation,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: AppTheme.pinkDown)),
-                                            labelStyle: TextStyle(color: AppTheme.pinkDown))
-                                      else
-                                        Visibility(
-                                          //visible if age is 8 or above
-                                          visible: peserta['age'] >= 8,
-                                          child: OutlinedButton(
-                                            //onHover show tooltip
-                                            onHover: (value) {
-                                              if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
-                                            },
-                                            onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
-                                            style: OutlinedButton.styleFrom(
-                                              backgroundColor: AppTheme.oldBrick,
-                                              foregroundColor: AppTheme.pinkDown,
-                                              shadowColor: Colors.black,
-                                              elevation: 4.0,
-                                              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                                              animationDuration: Duration(milliseconds: 300),
+                                              onPressed: () {
+                                                context.pushNamed(
+                                                  SanlatQuizRegistrationScreen.routeName,
+                                                  extra: {
+                                                    'id': peserta['id'].toString(),
+                                                    'name': peserta['name'],
+                                                    'avatar': peserta['avatar'],
+                                                    'age': peserta['age'].toString(),
+                                                    'remarks': peserta['remarks'] ?? '-',
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                'Daftarkan\nKuis?',
+                                                style: TextStyle(fontSize: 11.0),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
-                                            onPressed: () {
-                                              context.pushNamed(
-                                                SanlatQuizRegistrationScreen.routeName,
-                                                extra: {
-                                                  'id': peserta['id'].toString(),
-                                                  'name': peserta['name'],
-                                                  'avatar': peserta['avatar'],
-                                                  'age': peserta['age'].toString(),
-                                                  'remarks': peserta['remarks'] ?? '-',
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              'Daftarkan\nKuis?',
-                                              style: TextStyle(fontSize: 11.0),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        )
-                                    ],
+                                          )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -244,26 +248,45 @@ class HomeScreen extends HookConsumerWidget {
                     )
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045, left: 20.0, right: 10.0),
-                    child: FloatingActionButton(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-                      backgroundColor: AppTheme.oldBrick,
-                      foregroundColor: AppTheme.yellowNapes,
-                      onPressed: null,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
-                          Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
-                        ],
+                // Align(
+                //   alignment: Alignment.topRight,
+                //   child: Padding(
+                //     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045, left: 20.0, right: 10.0),
+                //     child: FloatingActionButton(
+                //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+                //       backgroundColor: AppTheme.oldBrick,
+                //       foregroundColor: AppTheme.yellowNapes,
+                //       onPressed: null,
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
+                //           Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045),
+                  child: Column(
+                    children: [
+                      AlignWidget(total: datas.length),
+                      SizedBox(height: 10.0),
+                      AlignWidget(
+                        total: datas.where((element) => element['gender'] == 'IKHWAN').length,
+                        title: 'Ikhwan',
                       ),
-                    ),
+                      SizedBox(height: 10.0),
+                      AlignWidget(
+                        total: datas.where((element) => element['gender'] == 'AKHWAT').length,
+                        title: 'Akhwat',
+                      ),
+                    ],
                   ),
-                ),
+                )
               ],
             );
           },

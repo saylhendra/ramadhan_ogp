@@ -32,12 +32,24 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
                   Text('Alamat: ${peserta['remarks']}'),
                   Text('Usia: ${peserta['age']} tahun'),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.width * 1,
                     margin: const EdgeInsets.only(top: 10.0),
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                       borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(image: NetworkImage(peserta['avatar'], scale: 1.0), fit: BoxFit.fitHeight),
+                      image: DecorationImage(
+                        image: NetworkImage(peserta['avatar'], scale: 1.0),
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.center,
+                      ),
                     ),
                   ),
                 ],
