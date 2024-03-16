@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ramadhan_ogp/src/features/home/home_screen.dart';
+import 'package:ramadhan_ogp/src/features/home/presentation/home_screen.dart';
 
 class SplashScreen extends HookConsumerWidget {
   const SplashScreen({super.key});

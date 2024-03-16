@@ -4,13 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/core/utils.dart';
-import 'package:ramadhan_ogp/src/features/home/home_menu_widget.dart';
+import 'package:ramadhan_ogp/src/features/home/presentation/widgets/home_menu_widget.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.dart';
 
-import '../../core/app_theme.dart';
-import '../sanlat/peserta_sanlat_detail_screen.dart';
-import '../sanlat/sanlat_registration_screen.dart';
+import '../../../core/app_theme.dart';
+import '../../sanlat/peserta_sanlat_detail_screen.dart';
+import '../../sanlat/sanlat_registration_screen.dart';
 
 //global key for form
 final formkey = GlobalKey<FormState>();

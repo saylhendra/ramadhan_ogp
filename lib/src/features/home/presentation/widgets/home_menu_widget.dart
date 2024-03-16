@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_screen.dart';
 
-import '../../core/app_theme.dart';
+import '../../../../core/app_theme.dart';
 
 class HomeMenuWidget extends HookConsumerWidget {
   const HomeMenuWidget({super.key});
@@ -37,8 +38,9 @@ class HomeMenuWidget extends HookConsumerWidget {
             },
           ),
           ListTile(
-            title: const Text('Jadwal Takjil', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            title: const Text('Daftar Peserta Kuis Pesantren', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
+              context.goNamed(KelompokKuisScreen.routeName);
               Navigator.pop(context);
             },
           ),

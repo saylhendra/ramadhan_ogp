@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 
-import '../features/home/home_screen.dart';
+import '../features/home/presentation/home_screen.dart';
 import '../features/sanlat/peserta_sanlat_detail_screen.dart';
 import '../features/sanlat/sanlat_registration_screen.dart';
 import '../features/starter/splash_screen.dart';
@@ -58,6 +59,16 @@ final GoRouter routerController = GoRouter(
           child: SanlatQuizRegistrationScreen(
             peserta: peserta,
           ),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/kelompok-kuis-screen',
+      name: KelompokKuisScreen.routeName,
+      pageBuilder: (context, state) {
+        // final peserta = state.extra as Map<String, dynamic>;
+        return NoTransitionPage(
+          child: KelompokKuisScreen(),
         );
       },
     ),

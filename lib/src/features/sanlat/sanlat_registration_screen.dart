@@ -18,7 +18,7 @@ import 'package:ramadhan_ogp/src/features/info/presentation/info_controller.dart
 
 import '../../core/app_theme.dart';
 import '../../core/utils.dart';
-import '../home/home_screen.dart';
+import '../home/presentation/home_screen.dart';
 import '../master/domain/master_block_domain.dart';
 import '../master/master_controller.dart';
 import 'sanlat_registration_controller.dart';
