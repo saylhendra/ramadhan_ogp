@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
 import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_screen.dart';
 
@@ -64,6 +65,13 @@ class HomeMenuWidget extends HookConsumerWidget {
             title: const Text('Daftar Peserta Kuis Pesantren', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
               context.goNamed(KelompokKuisScreen.routeName);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Peserta Based Usia', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            onTap: () {
+              context.goNamed(PesertaBasedUsiaScreen.routeName);
               Navigator.pop(context);
             },
           ),

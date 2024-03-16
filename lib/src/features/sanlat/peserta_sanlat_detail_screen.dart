@@ -23,6 +23,7 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(10.0),
         children: [
           Card(
+            elevation: 4.0,
             child: ListTile(
               title: Text('Nama: ${peserta['name']}'),
               subtitle: Column(
@@ -36,14 +37,14 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
                     width: MediaQuery.of(context).size.width * 1,
                     margin: const EdgeInsets.only(top: 10.0),
                     decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Colors.grey.withOpacity(0.5),
+                      //     spreadRadius: 2,
+                      //     blurRadius: 5,
+                      //     offset: const Offset(0, 2),
+                      //   ),
+                      // ],
                       borderRadius: BorderRadius.circular(10.0),
                       image: DecorationImage(
                         image: NetworkImage(peserta['avatar'], scale: 1.0),

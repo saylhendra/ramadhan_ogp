@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/features/home/presentation/home_screen.dart';
 
 import '../../../core/app_theme.dart';
+import '../../peserta/presentation/widgets/card_peserta_widget.dart';
 import '../../sanlat/peserta_sanlat_detail_screen.dart';
 import 'kelompok_kuis_controller.dart';
 
@@ -57,37 +58,44 @@ class KelompokKuisScreen extends HookConsumerWidget {
                                       onTap: () {
                                         context.pushNamed(PesertaSanlatDetailScreen.routeName, extra: data);
                                       },
-                                      child: Card(
-                                        child: Stack(
-                                          alignment: Alignment.bottomCenter,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                gradient: AppTheme.myGradient,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(data['avatar']),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(10.0),
-                                                  bottomRight: Radius.circular(10.0),
-                                                ),
-                                                color: AppTheme.yellowNapes.withAlpha(200),
-                                              ),
-                                              child: ListTile(
-                                                visualDensity: VisualDensity.compact,
-                                                title: Text('${data['name']} | ${data['age']}thn | ${data['remarks']}',
-                                                    style: TextStyle(height: 1.0, fontSize: 12.0, color: AppTheme.dark, fontWeight: FontWeight.bold)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      // child: Card(
+                                      //   child: Stack(
+                                      //     alignment: Alignment.bottomCenter,
+                                      //     children: [
+                                      //       Container(
+                                      //         decoration: BoxDecoration(
+                                      //           borderRadius: BorderRadius.circular(10.0),
+                                      //           gradient: AppTheme.myGradient,
+                                      //           image: DecorationImage(
+                                      //             image: NetworkImage(data['avatar']),
+                                      //             fit: BoxFit.cover,
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       Container(
+                                      //         width: double.infinity,
+                                      //         decoration: BoxDecoration(
+                                      //           borderRadius: BorderRadius.only(
+                                      //             bottomLeft: Radius.circular(10.0),
+                                      //             bottomRight: Radius.circular(10.0),
+                                      //           ),
+                                      //           color: AppTheme.yellowNapes.withAlpha(200),
+                                      //         ),
+                                      //         child: ListTile(
+                                      //           visualDensity: VisualDensity.compact,
+                                      //           title: Text('${data['name']} | ${data['age']}thn | ${data['remarks']}',
+                                      //               style: TextStyle(height: 1.0, fontSize: 12.0, color: AppTheme.dark, fontWeight: FontWeight.bold)),
+                                      //         ),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
+                                      child: CardPesertaWidget(
+                                        avatar: data['avatar'],
+                                        name: data['name'],
+                                        age: data['age'],
+                                        remarks: data['remarks'],
+                                        gender: data['gender'],
                                       ),
                                     ),
                                     //Numbering
