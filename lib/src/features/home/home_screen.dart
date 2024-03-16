@@ -105,7 +105,7 @@ class HomeScreen extends HookConsumerWidget {
                     Expanded(
                       flex: 0,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 4.0),
                         child: Form(
                           key: formkey,
                           child: TextFormField(
@@ -151,7 +151,7 @@ class HomeScreen extends HookConsumerWidget {
                     ),
                     Expanded(
                       child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
                           itemCount: keyWords.value.length > 1 ? listTmp.value.length : datas.length,
                           itemBuilder: (item, index) {
                             var peserta = keyWords.value.length > 1 ? listTmp.value[index] : datas[index];
@@ -174,11 +174,11 @@ class HomeScreen extends HookConsumerWidget {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.5,
+                                                width: MediaQuery.of(context).size.width * 0.35,
                                                 child: Text(
                                                   '${peserta['name']} | ${peserta['remarks']}\n${peserta['gender']}',
                                                   style: TextStyle(fontSize: 16.0),
-                                                  maxLines: 2,
+                                                  maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
@@ -243,6 +243,26 @@ class HomeScreen extends HookConsumerWidget {
                           }),
                     )
                   ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 75.0, left: 10.0, right: 10.0),
+                    child: FloatingActionButton(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+                      backgroundColor: AppTheme.oldBrick,
+                      foregroundColor: AppTheme.yellowNapes,
+                      onPressed: null,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
+                          Text('${datas.length}', style: TextStyle(fontSize: 18.0, height: 1.0), textAlign: TextAlign.center),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             );
