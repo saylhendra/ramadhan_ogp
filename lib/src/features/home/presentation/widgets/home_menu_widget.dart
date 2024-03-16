@@ -13,27 +13,50 @@ class HomeMenuWidget extends HookConsumerWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
-            child: const Text(
-              'Ramadhan Perumahan Orchid Green Park\n\n',
-              style: TextStyle(
-                fontFamily: 'NotoKufiArabic',
-                fontSize: 22,
-                color: AppTheme.pinkDown,
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [AppTheme.blackPerl, AppTheme.plantation],
+                  ),
+                ),
+                child: const Text(
+                  'Perumahan Orchid Green Park',
+                  style: TextStyle(fontFamily: 'NotoKufiArabic', fontSize: 22, color: AppTheme.pinkDown, height: 1.0),
+                ),
               ),
-            ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [AppTheme.blackPerl, AppTheme.plantation],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Image(image: AssetImage('assets/images/ramadhan_kareem.png'), width: 145.0),
+                      Positioned(right: -10, top: 10, child: Image(image: AssetImage('assets/images/moon.png'), width: 60.0)),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10.0,
+                      left: 10.0,
+                      right: 10.0,
+                      bottom: 15.0,
+                    ),
+                    child: Image.asset('assets/images/maar_logo.png', height: 80, width: 80),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
           ListTile(
-            title: const Text('Pesantren Kilat', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            title: const Text('Daftar Pesantren Kilat', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
-              context.goNamed(SanlatRegistrationScreen.routeName);
+              context.pushNamed(SanlatRegistrationScreen.routeName);
               Navigator.pop(context);
             },
           ),
