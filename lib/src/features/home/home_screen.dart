@@ -119,7 +119,7 @@ class HomeScreen extends HookConsumerWidget {
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Cari nama, alamat, usia...',
-                              suffixIcon: IconButton(
+                              prefixIcon: IconButton(
                                 onPressed: () {
                                   searchController.clear();
                                   keyWords.value = '';
@@ -247,7 +247,7 @@ class HomeScreen extends HookConsumerWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 75.0, left: 10.0, right: 10.0),
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045, left: 20.0, right: 10.0),
                     child: FloatingActionButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                       backgroundColor: AppTheme.oldBrick,
@@ -258,7 +258,7 @@ class HomeScreen extends HookConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
-                          Text('${datas.length}', style: TextStyle(fontSize: 18.0, height: 1.0), textAlign: TextAlign.center),
+                          Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
                         ],
                       ),
                     ),
