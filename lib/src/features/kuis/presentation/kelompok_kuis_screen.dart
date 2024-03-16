@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,105 +25,116 @@ class KelompokKuisScreen extends HookConsumerWidget {
           onPressed: () => context.goNamed(HomeScreen.routeName),
         ),
       ),
-      body: ref.watch(kelompokKuisControllerProvider).when(
-            data: (datas) {
-              return Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Column(
+      body: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          physics: const BouncingScrollPhysics(),
+          dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse, PointerDeviceKind.trackpad},
+        ),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(kelompokKuisControllerProvider);
+          },
+          child: ref.watch(kelompokKuisControllerProvider).when(
+                data: (datas) {
+                  return Stack(
+                    alignment: Alignment.topRight,
                     children: [
-                      Expanded(
-                        child: GridView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.0,
-                          ),
-                          itemBuilder: (context, index) {
-                            final data = datas[index];
-                            return Stack(
-                              children: [
-                                Card(
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                          gradient: AppTheme.myGradient,
-                                          image: DecorationImage(
-                                            image: NetworkImage(data['avatar']),
-                                            fit: BoxFit.cover,
+                      Column(
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.0,
+                              ),
+                              itemBuilder: (context, index) {
+                                final data = datas[index];
+                                return Stack(
+                                  children: [
+                                    Card(
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              gradient: AppTheme.myGradient,
+                                              image: DecorationImage(
+                                                image: NetworkImage(data['avatar']),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10.0),
-                                            bottomRight: Radius.circular(10.0),
+                                          Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(10.0),
+                                                bottomRight: Radius.circular(10.0),
+                                              ),
+                                              color: AppTheme.yellowNapes.withAlpha(200),
+                                            ),
+                                            child: ListTile(
+                                              visualDensity: VisualDensity.compact,
+                                              title: Text('${data['name']} | ${data['age']}thn | ${data['remarks']}',
+                                                  style: TextStyle(height: 1.0, fontSize: 12.0, color: AppTheme.dark, fontWeight: FontWeight.bold)),
+                                            ),
                                           ),
-                                          color: AppTheme.yellowNapes.withAlpha(200),
-                                        ),
-                                        child: ListTile(
-                                          visualDensity: VisualDensity.compact,
-                                          title: Text('${data['name']} | ${data['age']}thn | ${data['remarks']}',
-                                              style: TextStyle(height: 1.0, fontSize: 12.0, color: AppTheme.dark, fontWeight: FontWeight.bold)),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                //Numbering
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: AppTheme.plantation,
-                                      child: Text('${index + 1}', style: TextStyle(color: AppTheme.yellowNapes)),
                                     ),
-                                  ),
-                                ),
+                                    //Numbering
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: AppTheme.plantation,
+                                          child: Text('${index + 1}', style: TextStyle(color: AppTheme.yellowNapes)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              itemCount: datas.length,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01, left: 20.0, right: 10.0),
+                          child: FloatingActionButton(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+                            backgroundColor: AppTheme.oldBrick,
+                            foregroundColor: AppTheme.yellowNapes,
+                            onPressed: null,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
+                                Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
                               ],
-                            );
-                          },
-                          itemCount: datas.length,
+                            ),
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01, left: 20.0, right: 10.0),
-                      child: FloatingActionButton(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-                        backgroundColor: AppTheme.oldBrick,
-                        foregroundColor: AppTheme.yellowNapes,
-                        onPressed: null,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
-                            Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-            error: (e, s) => Center(
-              child: Text('Error: $e'),
-            ),
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
+                  );
+                },
+                error: (e, s) => Center(
+                  child: Text('Error: $e'),
+                ),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+        ),
+      ),
     );
   }
 }
