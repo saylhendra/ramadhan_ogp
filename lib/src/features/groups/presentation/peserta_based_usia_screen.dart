@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/peserta/presentation/widgets/card_peserta_widget.dart';
 
 import '../../../core/app_theme.dart';
 import '../../home/presentation/home_screen.dart';
+import 'grouping_screen.dart';
 import 'peserta_based_controller.dart';
 
 final formKey = GlobalKey<FormState>();
@@ -182,41 +182,23 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
                       selectedItem: selectedGroup,
                     ),
                     //TextFormField
-                    SizedBox(height: 10.0),
-                    SizedBox(
-                      width: 200.0,
-                      child: Form(
-                        key: formKey,
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'PIN Admin Tidak Boleh Kosong';
-                            } else if (value.isNotEmpty && value != '2527') {
-                              return 'PIN Admin Salah';
-                            }
-                            return null;
-                          },
-                          controller: pinController,
-                          maxLength: 4,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'PIN Admin',
-                            hintText: 'PIN Khusus Admin',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 10.0),
                     FilledButton(
                         onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            await ref
-                                .read(sanlatGroupsControllerProvider.notifier)
-                                .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
-                            Navigator.pop(dcontext);
-                            dcontext.pushNamed(GroupingScreen.routeName);
-                          }
+                          doConfirmPin(
+                            dcontext: dcontext,
+                            ref: ref,
+                            idPeserta: idPeserta,
+                            selectedGroup: selectedGroup,
+                            pinController: pinController,
+                          );
+                          // if (formKey.currentState!.validate()) {
+                          //   await ref
+                          //       .read(sanlatGroupsControllerProvider.notifier)
+                          //       .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
+                          //   Navigator.pop(dcontext);
+                          //   dcontext.pushNamed(GroupingScreen.routeName);
+                          // }
                         },
                         child: Text('Tambahkan ke Kelompok')),
                   ],
@@ -229,5 +211,66 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
         error: (error, stackTrace) => Center(child: Text('Error: $error')),
       );
     }
+  }
+
+  void doConfirmPin(
+      {required BuildContext dcontext,
+      required WidgetRef ref,
+      required int idPeserta,
+      required String selectedGroup,
+      required TextEditingController pinController}) {
+    showDialog(
+      context: dcontext,
+      builder: (context) => AlertDialog(
+        content: Wrap(
+          children: [
+            Center(
+              child: Form(
+                key: formKey,
+                child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'PIN Admin Tidak Boleh Kosong';
+                    } else if (value.isNotEmpty && value != '2527') {
+                      return 'PIN Admin Salah';
+                    }
+                    return null;
+                  },
+                  controller: pinController,
+                  maxLength: 4,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'PIN Admin',
+                    hintText: 'PIN Khusus Admin',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            FilledButton(
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  await ref
+                      .read(sanlatGroupsControllerProvider.notifier)
+                      .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
+                  context.pop();
+                  context.pop();
+                  context.goNamed(GroupingScreen.routeName);
+                }
+                // if (formKey.currentState!.validate()) {
+                //   await ref
+                //       .read(sanlatGroupsControllerProvider.notifier)
+                //       .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
+                //   Navigator.pop(dcontext);
+                //   dcontext.pushNamed(GroupingScreen.routeName);
+                // }
+              },
+              child: Text('Tambahkan ke Kelompok'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

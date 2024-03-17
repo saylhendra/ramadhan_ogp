@@ -22,7 +22,6 @@ class SanlatGroupsController extends _$SanlatGroupsController {
   }
 
   Future<void> addGroupToSanlatGroup({required int idPeserta, required String idGroup}) async {
-    print('idPeserta: $idPeserta, idGroup: $idGroup');
     await Supabase.instance.client.from('sanlats_sanlat_group_links').upsert({
       'sanlat_id': idPeserta,
       'sanlat_group_id': idGroup,
