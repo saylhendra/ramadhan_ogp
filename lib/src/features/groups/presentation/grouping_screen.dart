@@ -123,10 +123,10 @@ class GroupingScreen extends HookConsumerWidget {
                                       ),
                                       Container(
                                         height: 25,
-                                        margin: const EdgeInsets.only(right: 60.0, bottom: 52.0),
+                                        margin: const EdgeInsets.only(right: 60.0, bottom: 52.0, left: 3.5),
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
                                         decoration: BoxDecoration(
-                                          color: AppTheme.white.withOpacity(0.9),
+                                          color: getColorBaseOnFilter(filter: filterBy.value),
                                           borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(10.0),
                                           ),
@@ -135,7 +135,7 @@ class GroupingScreen extends HookConsumerWidget {
                                           child: Text(
                                             data['title'],
                                             style: const TextStyle(
-                                              color: AppTheme.cherryWood,
+                                              color: AppTheme.yellowNapes,
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
                                               height: 1.0,
@@ -168,5 +168,20 @@ class GroupingScreen extends HookConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => Center(child: Text('Error: $error'))),
     );
+  }
+
+  getColorBaseOnFilter({required String filter}) {
+    switch (filter) {
+      case 'Semua':
+        return AppTheme.dark.withAlpha(200);
+      case 'CLUSTER A - (4 - 6 THN)':
+        return AppTheme.green.withAlpha(200);
+      case 'CLUSTER B - (7 - 9 THN)':
+        return AppTheme.blueForest.withAlpha(200);
+      case 'CLUSTER C - (10 - 13 THN)':
+        return AppTheme.brownForest.withAlpha(200);
+      default:
+        return AppTheme.dark.withAlpha(200);
+    }
   }
 }

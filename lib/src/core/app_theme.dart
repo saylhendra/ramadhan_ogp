@@ -13,6 +13,9 @@ class AppTheme {
   static const blackPerl = Color(0xFF041322);
   static const oldBrick = Color(0xFF8F151A);
   static const yellowNapes = Color(0xFFFADA5E);
+  static const brownForest = Color(0xFF4E4E4E);
+  static const sahara = Color(0xFFE3D9C6);
+  static const blueForest = Color.fromARGB(255, 33, 29, 147);
   static const myGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
