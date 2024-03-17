@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
 import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
@@ -80,6 +81,16 @@ final GoRouter routerController = GoRouter(
         // final peserta = state.extra as Map<String, dynamic>;
         return NoTransitionPage(
           child: PesertaBasedUsiaScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/grouping-screen',
+      name: GroupingScreen.routeName,
+      pageBuilder: (context, state) {
+        // final peserta = state.extra as Map<String, dynamic>;
+        return NoTransitionPage(
+          child: GroupingScreen(),
         );
       },
     ),

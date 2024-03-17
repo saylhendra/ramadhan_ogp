@@ -1,12 +1,16 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/peserta/presentation/widgets/card_peserta_widget.dart';
 
 import '../../../core/app_theme.dart';
 import '../../home/presentation/home_screen.dart';
 import 'peserta_based_controller.dart';
+
+final formKey = GlobalKey<FormState>();
 
 class PesertaBasedUsiaScreen extends HookConsumerWidget {
   const PesertaBasedUsiaScreen({super.key});
@@ -16,6 +20,7 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filterBy = useState('Semua');
     var listTmp = useState([]);
+    final listSanlatGroupsState = ref.watch(sanlatGroupsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -103,15 +108,19 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
                                   child: CircleAvatar(
                                     child: Text(
                                       '${index + 1}',
-                                      style: TextStyle(
-                                        color: AppTheme.dark,
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: TextStyle(color: AppTheme.dark, fontSize: 18.0, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
                               ),
+                              Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        showComboboxSanlatGroups(
+                                            idPeserta: peserta['id'], dcontext: context, groups: listSanlatGroupsState, ref: ref);
+                                      },
+                                      icon: Icon(Icons.add_box, color: AppTheme.oldBrick, size: 30.0))),
                             ],
                           );
                         } catch (e) {
@@ -142,4 +151,83 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
   }
 
   void doOnfilter({required String filterBy, required List datas}) {}
+
+  void showComboboxSanlatGroups(
+      {required BuildContext dcontext, required AsyncValue<List> groups, required WidgetRef ref, required int idPeserta}) async {
+    final pinController = TextEditingController();
+    if (await ref.read(groupingControllerProvider.notifier).checkIfPesertaAlreadyGrouped(idPeserta: idPeserta)) {
+      showDialog(context: dcontext, builder: (context) => AlertDialog(content: Text('Peserta sudah tergabung dalam kelompok.')));
+      return;
+    } else {
+      groups.when(
+        data: (datas) {
+          List<dynamic> groups = [...datas];
+          //sorting by id desc
+          groups.sort((a, b) => b['id'].compareTo(a['id']));
+          return showModalBottomSheet(
+            scrollControlDisabledMaxHeightRatio: 0.9,
+            context: dcontext,
+            builder: (double) {
+              var selectedGroup = 'Pilih Kelompok';
+              return Container(
+                margin: const EdgeInsets.all(15.0),
+                height: MediaQuery.of(dcontext).size.height * 0.65,
+                child: Column(
+                  children: [
+                    DropdownSearch<String>(
+                      items: groups.map((e) => '${e['id']}~${e['title']} ${e['gender']}').toList(),
+                      onChanged: (item) {
+                        selectedGroup = item!;
+                      },
+                      selectedItem: selectedGroup,
+                    ),
+                    //TextFormField
+                    SizedBox(height: 10.0),
+                    SizedBox(
+                      width: 200.0,
+                      child: Form(
+                        key: formKey,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'PIN Admin Tidak Boleh Kosong';
+                            } else if (value.isNotEmpty && value != '2527') {
+                              return 'PIN Admin Salah';
+                            }
+                            return null;
+                          },
+                          controller: pinController,
+                          maxLength: 4,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'PIN Admin',
+                            hintText: 'PIN Khusus Admin',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    FilledButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            await ref
+                                .read(sanlatGroupsControllerProvider.notifier)
+                                .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
+                            Navigator.pop(dcontext);
+                            dcontext.pushNamed(GroupingScreen.routeName);
+                          }
+                        },
+                        child: Text('Tambahkan ke Kelompok')),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+      );
+    }
+  }
 }
