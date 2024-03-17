@@ -276,11 +276,13 @@ class HomeScreen extends HookConsumerWidget {
                       AlignWidget(total: datas.length),
                       SizedBox(height: 10.0),
                       AlignWidget(
+                        type: 'chip',
                         total: datas.where((element) => element['gender'] == 'IKHWAN').length,
                         title: 'Ikhwan',
                       ),
                       SizedBox(height: 10.0),
                       AlignWidget(
+                        type: 'chip',
                         total: datas.where((element) => element['gender'] == 'AKHWAT').length,
                         title: 'Akhwat',
                       ),

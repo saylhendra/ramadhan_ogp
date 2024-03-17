@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/features/peserta/presentation/widgets/card_peserta_widget.dart';
 
 import '../../../core/app_theme.dart';
-import '../../home/presentation/home_screen.dart';
+import '../../home/presentation/widgets/home_menu_widget.dart';
 import 'grouping_screen.dart';
 import 'peserta_based_controller.dart';
 
@@ -28,11 +28,12 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
         flexibleSpace: Container(
           decoration: BoxDecoration(gradient: AppTheme.myGradient),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.home),
-          onPressed: () => context.goNamed(HomeScreen.routeName),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.home),
+        //   onPressed: () => context.goNamed(HomeScreen.routeName),
+        // ),
       ),
+      drawer: HomeMenuWidget(),
       body: ref.watch(pesertaBasedControllerProvider).when(
             data: (datas) {
               List<String> listGroupAges = calculateListOfAges(datas: datas);
@@ -256,15 +257,8 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
                       .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
                   context.pop();
                   context.pop();
-                  context.goNamed(GroupingScreen.routeName);
+                  context.pushNamed(GroupingScreen.routeName);
                 }
-                // if (formKey.currentState!.validate()) {
-                //   await ref
-                //       .read(sanlatGroupsControllerProvider.notifier)
-                //       .addGroupToSanlatGroup(idPeserta: idPeserta, idGroup: selectedGroup.split('~')[0]);
-                //   Navigator.pop(dcontext);
-                //   dcontext.pushNamed(GroupingScreen.routeName);
-                // }
               },
               child: Text('Tambahkan ke Kelompok'),
             ),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
+import 'package:ramadhan_ogp/src/features/home/presentation/home_screen.dart';
 import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_screen.dart';
 
@@ -56,6 +57,13 @@ class HomeMenuWidget extends HookConsumerWidget {
             ],
           ),
           ListTile(
+            title: const Text('Home', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            onTap: () {
+              context.pushReplacementNamed(HomeScreen.routeName);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
             title: const Text('Daftar Pesantren Kilat', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
               context.pushNamed(SanlatRegistrationScreen.routeName);
@@ -63,16 +71,16 @@ class HomeMenuWidget extends HookConsumerWidget {
             },
           ),
           ListTile(
-            title: const Text('Daftar Peserta Kuis Pesantren', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            title: const Text('Peserta Kuis', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
               context.goNamed(KelompokKuisScreen.routeName);
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: const Text('Peserta Based Usia', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            title: const Text('Peserta Berdasarkan Usia', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
-              context.goNamed(PesertaBasedUsiaScreen.routeName);
+              context.pushNamed(PesertaBasedUsiaScreen.routeName);
               Navigator.pop(context);
             },
           ),

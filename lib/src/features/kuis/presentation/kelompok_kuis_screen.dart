@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ramadhan_ogp/src/features/home/presentation/home_screen.dart';
+import 'package:ramadhan_ogp/src/features/home/presentation/widgets/home_menu_widget.dart';
 
 import '../../../core/app_theme.dart';
 import '../../peserta/presentation/widgets/card_peserta_widget.dart';
@@ -16,17 +16,18 @@ class KelompokKuisScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Peserta Kuis Ramadhan'),
+        title: const Text('Peserta Kuis'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: AppTheme.myGradient,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.home),
-          onPressed: () => context.goNamed(HomeScreen.routeName),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.home),
+        //   onPressed: () => context.goNamed(HomeScreen.routeName),
+        // ),
       ),
+      drawer: HomeMenuWidget(),
       body: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
           physics: const BouncingScrollPhysics(),
