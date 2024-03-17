@@ -42,32 +42,34 @@ class GroupingScreen extends HookConsumerWidget {
                             },
                             ...datas.map((e) => e).toList()
                           ];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
-                            child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              children: listFilter
-                                  .map((e) => InkWell(
-                                        onTap: () {
-                                          listTmp.value = [...groupings];
-                                          filterBy.value = e['title'];
-                                          listTmp.value = groupings.where((element) => element['title'].toString() == e['title']).toList();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-                                          child: Chip(
-                                            label: Text(
-                                              '${e['title']}',
-                                              style: TextStyle(
-                                                color: AppTheme.white,
-                                                fontFamily: 'NotoKufiArabic',
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: listFilter
+                                    .map((e) => InkWell(
+                                          onTap: () {
+                                            listTmp.value = [...groupings];
+                                            filterBy.value = e['title'];
+                                            listTmp.value = groupings.where((element) => element['title'].toString() == e['title']).toList();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+                                            child: Chip(
+                                              label: Text(
+                                                '${e['title']}',
+                                                style: TextStyle(
+                                                  color: AppTheme.white,
+                                                  fontFamily: 'NotoKufiArabic',
+                                                ),
                                               ),
+                                              backgroundColor: filterBy.value == e['title'] ? AppTheme.oldBrick : AppTheme.oldBrick.withAlpha(100),
                                             ),
-                                            backgroundColor: filterBy.value == e['title'] ? AppTheme.oldBrick : AppTheme.oldBrick.withAlpha(100),
                                           ),
-                                        ),
-                                      ))
-                                  .toList(),
+                                        ))
+                                    .toList(),
+                              ),
                             ),
                           );
                         },
@@ -105,16 +107,18 @@ class GroupingScreen extends HookConsumerWidget {
                                         gender: data['gender'],
                                         remarks: data['remarks'],
                                       ),
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: IconButton(
-                                          icon: Icon(Icons.delete, color: Colors.red),
-                                          // onPressed: () async {
-                                          //   await ref.read(groupingControllerProvider.notifier).removed(data);
-                                          //   ref.invalidate(groupingControllerProvider);
-                                          // },
-                                          onPressed: null,
+                                      Visibility(
+                                        visible: false,
+                                        child: Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: IconButton(
+                                            icon: Icon(Icons.delete, color: Colors.red),
+                                            onPressed: () async {
+                                              await ref.read(groupingControllerProvider.notifier).removed(data);
+                                              ref.invalidate(groupingControllerProvider);
+                                            },
+                                          ),
                                         ),
                                       ),
                                       Container(
