@@ -30,7 +30,7 @@ class HomeScreen extends HookConsumerWidget {
     // );
     final searchController = useTextEditingController();
     final keyWords = useState('');
-    final isShowSearchBox = useState(false);
+    useState(false);
     var listTmp = useState([]);
 
     return Scaffold(

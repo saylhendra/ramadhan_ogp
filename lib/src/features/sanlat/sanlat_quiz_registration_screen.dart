@@ -16,7 +16,6 @@ import 'package:ramadhan_ogp/src/features/info/presentation/info_controller.dart
 import '../../core/app_theme.dart';
 import '../../core/utils.dart';
 import '../home/presentation/home_screen.dart';
-import '../master/master_controller.dart';
 import 'sanlat_registration_controller.dart';
 
 var _formKey = GlobalKey<FormState>();
@@ -33,18 +32,8 @@ class SanlatQuizRegistrationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var namaController = useTextEditingController();
-    var dobController = useTextEditingController();
-    var dobInsertController = useTextEditingController();
-    var addressController = useTextEditingController();
-    var calculatedAgeController = useTextEditingController();
-    var calculatedAge = useState<int>(0);
-    var _character = useState(EnumGender.ikhwan);
     var loadingSubmit = useState<bool>(false);
-    var avatarController = useTextEditingController();
-    var imagePreview = useState<String>('');
     var isExpandedState = useState<bool>(false);
-    final listMasterBlock = ref.watch(masterBlockControllerProvider);
     final infosState = ref.watch(infoControllerProvider);
 
     return PopScope(

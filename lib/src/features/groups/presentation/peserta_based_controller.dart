@@ -17,7 +17,6 @@ class SanlatGroupsController extends _$SanlatGroupsController {
   @override
   FutureOr<List<dynamic>> build() async {
     final res = await Supabase.instance.client.from('sanlat_groups').select();
-    print('res: $res');
     return res;
   }
 

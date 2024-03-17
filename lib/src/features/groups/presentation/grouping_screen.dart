@@ -43,7 +43,7 @@ class GroupingScreen extends HookConsumerWidget {
                             ...datas.map((e) => e).toList()
                           ];
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.start,
                               children: listFilter
@@ -54,7 +54,7 @@ class GroupingScreen extends HookConsumerWidget {
                                           listTmp.value = groupings.where((element) => element['title'].toString() == e['title']).toList();
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
                                           child: Chip(
                                             label: Text(
                                               '${e['title']}',
