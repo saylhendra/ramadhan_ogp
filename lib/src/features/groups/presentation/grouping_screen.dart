@@ -16,6 +16,8 @@ class GroupingScreen extends HookConsumerWidget {
     final groupingListState = ref.watch(groupingControllerProvider);
     final filterBy = useState('Semua');
     final listTmp = useState([]);
+    final totalIkhwan = useState([]);
+    final totalAkhwat = useState([]);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +29,10 @@ class GroupingScreen extends HookConsumerWidget {
       ),
       drawer: HomeMenuWidget(),
       body: groupingListState.when(
-          data: (groupings) {
+          data: (datas) {
+            var groupings = [...datas];
+            //sorting by gender
+            groupings.sort((b, a) => a['gender'].compareTo(b['gender']));
             return Column(
               children: [
                 Expanded(
@@ -35,11 +40,7 @@ class GroupingScreen extends HookConsumerWidget {
                   child: ref.watch(sanlatGroupsControllerProvider).when(
                         data: (datas) {
                           var listFilter = [
-                            {
-                              'id': 0,
-                              'title': 'Semua',
-                              'gender': 'IKHWAN/ AKHWAT',
-                            },
+                            {'id': 0, 'title': 'Semua', 'gender': 'IKHWAN/ AKHWAT'},
                             ...datas.map((e) => e).toList()
                           ];
                           return SingleChildScrollView(
@@ -90,7 +91,7 @@ class GroupingScreen extends HookConsumerWidget {
                                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  crossAxisSpacing: 10.0,
+                                  crossAxisSpacing: 5.0,
                                 ),
                                 // itemCount: groupings.length,
                                 itemCount: filterBy.value == 'Semua' ? groupings.length : listTmp.value.length,
@@ -106,6 +107,16 @@ class GroupingScreen extends HookConsumerWidget {
                                         age: data['age'],
                                         gender: data['gender'],
                                         remarks: data['remarks'],
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CircleAvatar(
+                                            backgroundColor: AppTheme.pinkDown,
+                                            child: Text('${index + 1}', style: TextStyle(color: AppTheme.oldBrick)),
+                                          ),
+                                        ),
                                       ),
                                       Visibility(
                                         visible: false,
@@ -149,16 +160,33 @@ class GroupingScreen extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      Chip(
-                        backgroundColor: AppTheme.oldBrick,
-                        label: Text(
-                          'Total: ${filterBy.value == 'Semua' ? groupings.length : listTmp.value.length}',
-                          style: TextStyle(
-                            color: AppTheme.yellowNapes,
-                            fontFamily: 'NotoKufiArabic',
+                      Wrap(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.end,
+                        children: [
+                          Chip(
+                            backgroundColor: AppTheme.oldBrick,
+                            label: Text(
+                              'Total: ${filterBy.value == 'Semua' ? groupings.length : listTmp.value.length}',
+                              style: TextStyle(color: AppTheme.yellowNapes, fontSize: 14.0),
+                            ),
                           ),
-                        ),
-                      ),
+                          Chip(
+                            backgroundColor: AppTheme.oldBrick,
+                            label: Text(
+                              'Ikhwan: ${filterBy.value == 'Semua' ? groupings.where((element) => element['gender'] == 'IKHWAN').length : listTmp.value.where((element) => element['gender'] == 'IKHWAN').length}',
+                              style: TextStyle(color: AppTheme.yellowNapes, fontSize: 11.0),
+                            ),
+                          ),
+                          Chip(
+                            backgroundColor: AppTheme.oldBrick,
+                            label: Text(
+                              'Akhwat: ${filterBy.value == 'Semua' ? groupings.where((element) => element['gender'] == 'AKHWAT').length : listTmp.value.where((element) => element['gender'] == 'AKHWAT').length}',
+                              style: TextStyle(color: AppTheme.yellowNapes, fontSize: 11.0),
+                            ),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),

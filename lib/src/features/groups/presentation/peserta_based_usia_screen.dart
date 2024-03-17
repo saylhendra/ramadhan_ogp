@@ -85,7 +85,7 @@ class PesertaBasedUsiaScreen extends HookConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 10.0,
+                        crossAxisSpacing: 5.0,
                         mainAxisSpacing: 10.0,
                       ),
                       itemCount: filterBy.value == 'Semua' ? datas.length : listTmp.value.length,

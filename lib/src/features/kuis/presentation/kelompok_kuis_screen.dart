@@ -38,7 +38,9 @@ class KelompokKuisScreen extends HookConsumerWidget {
             ref.invalidate(kelompokKuisControllerProvider);
           },
           child: ref.watch(kelompokKuisControllerProvider).when(
-                data: (datas) {
+                data: (myList) {
+                  var datas = [...myList];
+                  datas.sort((b, a) => a['gender'].compareTo(b['gender']));
                   return Stack(
                     alignment: Alignment.topRight,
                     children: [
@@ -49,7 +51,7 @@ class KelompokKuisScreen extends HookConsumerWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 10.0,
+                                crossAxisSpacing: 5.0,
                               ),
                               itemBuilder: (context, index) {
                                 final data = datas[index];
@@ -59,38 +61,6 @@ class KelompokKuisScreen extends HookConsumerWidget {
                                       onTap: () {
                                         context.pushNamed(PesertaSanlatDetailScreen.routeName, extra: data);
                                       },
-                                      // child: Card(
-                                      //   child: Stack(
-                                      //     alignment: Alignment.bottomCenter,
-                                      //     children: [
-                                      //       Container(
-                                      //         decoration: BoxDecoration(
-                                      //           borderRadius: BorderRadius.circular(10.0),
-                                      //           gradient: AppTheme.myGradient,
-                                      //           image: DecorationImage(
-                                      //             image: NetworkImage(data['avatar']),
-                                      //             fit: BoxFit.cover,
-                                      //           ),
-                                      //         ),
-                                      //       ),
-                                      //       Container(
-                                      //         width: double.infinity,
-                                      //         decoration: BoxDecoration(
-                                      //           borderRadius: BorderRadius.only(
-                                      //             bottomLeft: Radius.circular(10.0),
-                                      //             bottomRight: Radius.circular(10.0),
-                                      //           ),
-                                      //           color: AppTheme.yellowNapes.withAlpha(200),
-                                      //         ),
-                                      //         child: ListTile(
-                                      //           visualDensity: VisualDensity.compact,
-                                      //           title: Text('${data['name']} | ${data['age']}thn | ${data['remarks']}',
-                                      //               style: TextStyle(height: 1.0, fontSize: 12.0, color: AppTheme.dark, fontWeight: FontWeight.bold)),
-                                      //         ),
-                                      //       ),
-                                      //     ],
-                                      //   ),
-                                      // ),
                                       child: CardPesertaWidget(
                                         avatar: data['avatar'],
                                         name: data['name'],
@@ -118,26 +88,45 @@ class KelompokKuisScreen extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01, left: 20.0, right: 10.0),
-                          child: FloatingActionButton(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-                            backgroundColor: AppTheme.oldBrick,
-                            foregroundColor: AppTheme.yellowNapes,
-                            onPressed: null,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
-                                Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
-                              ],
+                      Wrap(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.end,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01, left: 20.0, right: 10.0),
+                            child: FloatingActionButton(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+                              backgroundColor: AppTheme.oldBrick,
+                              foregroundColor: AppTheme.yellowNapes,
+                              onPressed: null,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Total', style: TextStyle(fontSize: 11.0, height: 1.0), textAlign: TextAlign.center),
+                                  Text('${datas.length}', style: TextStyle(fontSize: 20.0, height: 1.0), textAlign: TextAlign.center),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                          SizedBox(height: 5.0),
+                          Chip(
+                            backgroundColor: AppTheme.oldBrick,
+                            label: Text(
+                              'Ikhwan: ${datas.where((element) => element['gender'] == 'IKHWAN').length}',
+                              style: TextStyle(color: AppTheme.yellowNapes, fontSize: 11.0),
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
+                          Chip(
+                            backgroundColor: AppTheme.oldBrick,
+                            label: Text(
+                              'Akhwat: ${datas.where((element) => element['gender'] == 'AKHWAT').length}',
+                              style: TextStyle(color: AppTheme.yellowNapes, fontSize: 11.0),
+                            ),
+                          )
+                        ],
+                      )
                     ],
                   );
                 },
