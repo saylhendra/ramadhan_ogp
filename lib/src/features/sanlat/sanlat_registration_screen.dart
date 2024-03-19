@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -12,7 +11,7 @@ import 'package:form_validator/form_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:ramadhan_ogp/src/features/info/presentation/info_controller.dart';
 
@@ -211,7 +210,8 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
                                   icon: const Icon(Icons.image),
                                   onPressed: () async {
                                     // avatarController.text = await doUploadImage(context);
-                                    avatarController.text = await doUploadImageToFirebase(context, namaController.text);
+                                    // avatarController.text = await doUploadImageToFirebase(context, namaController.text);
+                                    avatarController.text = await doUploadImageToFirebaseMobile(context, namaController.text);
                                     // await doUploadImageToFirebase(context, namaController.text);
                                     imagePreview.value = avatarController.text;
                                   },
@@ -347,66 +347,85 @@ class SanlatRegistrationScreen extends HookConsumerWidget {
     }
   }
 
-  Future<String> doUploadImage(BuildContext context) async {
-    var result = '';
-    if (kIsWeb) {
-      final imageSource = await ImagePickerWeb.getImageAsBytes();
-      if (imageSource != null) {
-        // var f = await imageSource.readAsBytes();
-        var f = imageSource;
-        // File photo = File(f.toSet().toString());
-        String fileInBase64 = base64Encode(f);
-        // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
-        final bytes = f.lengthInBytes;
-        print(bytes.toString());
-        if (bytes > 5000000) {
-          showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
-        } else {
-          result = fileInBase64;
-        }
-      }
-    } else {
-      final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (imageSource != null) {
-        var f = File(imageSource.path);
-        final bytes = f.lengthSync();
-        print(bytes.toString());
-        if (bytes > 5000000) {
-          showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
-        } else {
-          result = base64Encode(f.readAsBytesSync());
-        }
-      }
-    }
-    return result;
-  }
+  // Future<String> doUploadImage(BuildContext context) async {
+  //   var result = '';
+  //   if (kIsWeb) {
+  //     final imageSource = await ImagePickerWeb.getImageAsBytes();
+  //     if (imageSource != null) {
+  //       // var f = await imageSource.readAsBytes();
+  //       var f = imageSource;
+  //       // File photo = File(f.toSet().toString());
+  //       String fileInBase64 = base64Encode(f);
+  //       // var fileName = photo.path.split('/').last.replaceAll('scaled_', '');
+  //       final bytes = f.lengthInBytes;
+  //       print(bytes.toString());
+  //       if (bytes > 5000000) {
+  //         showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+  //       } else {
+  //         result = fileInBase64;
+  //       }
+  //     }
+  //   } else {
+  //     final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //     if (imageSource != null) {
+  //       var f = File(imageSource.path);
+  //       final bytes = f.lengthSync();
+  //       print(bytes.toString());
+  //       if (bytes > 5000000) {
+  //         showAlertDialog(context, 'Sorry, file size is too large, max 5Mb');
+  //       } else {
+  //         result = base64Encode(f.readAsBytesSync());
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  Future<String> doUploadImageToFirebase(BuildContext context, String paramFileName) async {
+  // Future<String> doUploadImageToFirebase(BuildContext context, String paramFileName) async {
+  //   var firebaseUrl = '';
+  //   final imageSource = await ImagePickerWeb.getImageAsBytes();
+  //   if (imageSource != null) {
+  //     var f = imageSource;
+  //     var fileName = 'sanlat_$paramFileName${DateTime.now().millisecondsSinceEpoch}';
+  //     final bytes = f.lengthInBytes;
+  //     if (bytes > 2000000) {
+  //       showAlertDialog(context, 'Maaf, ukuran file terlalu besar, maksimal 2Mb');
+  //     } else {
+  //       // Create a Reference to the file
+  //       Reference ref = FirebaseStorage.instance.ref().child('peserta-sanlats').child('/$fileName.jpg');
+  //       final metadata = SettableMetadata(
+  //         contentType: 'image/jpeg',
+  //         // customMetadata: {'picked-file-path': file.relativePath ?? ''},
+  //         contentEncoding: 'base64',
+  //       );
+  //       UploadTask uploadTask = ref.putData(await f, metadata);
+  //       var dowurl = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+  //       firebaseUrl = dowurl;
+  //     }
+  //   }
+  //   return firebaseUrl;
+  // }
+
+  Future<String> doUploadImageToFirebaseMobile(BuildContext context, String paramFileName) async {
     var firebaseUrl = '';
-    final imageSource = await ImagePickerWeb.getImageAsBytes();
+    final imageSource = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (imageSource != null) {
-      var f = imageSource;
+      var f = File(imageSource.path);
       var fileName = 'sanlat_$paramFileName${DateTime.now().millisecondsSinceEpoch}';
-      final bytes = f.lengthInBytes;
-      if (bytes > 3000000) {
-        showAlertDialog(context, 'Maaf, ukuran file terlalu besar, maksimal 3Mb');
+      final bytes = f.lengthSync();
+      if (bytes > 2000000) {
+        showAlertDialog(context, 'Maaf, ukuran file terlalu besar, maksimal 2Mb');
       } else {
         // Create a Reference to the file
         Reference ref = FirebaseStorage.instance.ref().child('peserta-sanlats').child('/$fileName.jpg');
         final metadata = SettableMetadata(
           contentType: 'image/jpeg',
-          // customMetadata: {'picked-file-path': file.relativePath ?? ''},
-          contentEncoding: 'base64',
+          customMetadata: {'picked-file-path': f.path},
         );
-        UploadTask uploadTask = ref.putData(await f, metadata);
+        UploadTask uploadTask = ref.putFile(f, metadata);
         var dowurl = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
         firebaseUrl = dowurl;
       }
-      // if (kIsWeb) {
-      //   uploadTask = ref.putData(await file.readAsBytes(), metadata);
-      // } else {
-      //   uploadTask = ref.putFile(io.File(file.path), metadata);
-      // }
     }
     return firebaseUrl;
   }

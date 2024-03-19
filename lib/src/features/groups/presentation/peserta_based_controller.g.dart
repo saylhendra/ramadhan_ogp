@@ -24,7 +24,7 @@ final pesertaBasedControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$PesertaBasedController = AutoDisposeAsyncNotifier<List<dynamic>>;
 String _$sanlatGroupsControllerHash() =>
-    r'b700d92bfed8693295996884df74aa06c28fd4c8';
+    r'3789587e0e7b841ff131654e0089da965f078aaf';
 
 /// See also [SanlatGroupsController].
 @ProviderFor(SanlatGroupsController)

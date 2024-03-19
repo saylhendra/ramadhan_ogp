@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ramadhan_ogp/src/features/absensi/presentation/absensi_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
 import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
@@ -91,6 +92,18 @@ final GoRouter routerController = GoRouter(
         // final peserta = state.extra as Map<String, dynamic>;
         return NoTransitionPage(
           child: GroupingScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/absensi-screen',
+      name: AbsensiScreen.routeName,
+      pageBuilder: (context, state) {
+        final clusterType = state.extra as String?;
+        return NoTransitionPage(
+          child: AbsensiScreen(
+            clusterType: clusterType ?? 'a',
+          ),
         );
       },
     ),

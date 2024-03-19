@@ -16,8 +16,6 @@ class GroupingScreen extends HookConsumerWidget {
     final groupingListState = ref.watch(groupingControllerProvider);
     final filterBy = useState('Semua');
     final listTmp = useState([]);
-    final totalIkhwan = useState([]);
-    final totalAkhwat = useState([]);
 
     return Scaffold(
       appBar: AppBar(
@@ -171,6 +169,7 @@ class GroupingScreen extends HookConsumerWidget {
                               style: TextStyle(color: AppTheme.yellowNapes, fontSize: 14.0),
                             ),
                           ),
+                          SizedBox(height: 5.0),
                           Chip(
                             backgroundColor: AppTheme.oldBrick,
                             label: Text(
@@ -178,6 +177,7 @@ class GroupingScreen extends HookConsumerWidget {
                               style: TextStyle(color: AppTheme.yellowNapes, fontSize: 11.0),
                             ),
                           ),
+                          SizedBox(height: 5.0),
                           Chip(
                             backgroundColor: AppTheme.oldBrick,
                             label: Text(

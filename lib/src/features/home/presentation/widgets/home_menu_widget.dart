@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ramadhan_ogp/src/features/absensi/presentation/absensi_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
 import 'package:ramadhan_ogp/src/features/home/presentation/home_screen.dart';
@@ -88,6 +89,27 @@ class HomeMenuWidget extends HookConsumerWidget {
             title: const Text('Grouping', style: TextStyle(fontFamily: 'NotoKufiArabic')),
             onTap: () {
               context.goNamed(GroupingScreen.routeName);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Absensi Cluster A'),
+            onTap: () {
+              context.goNamed(AbsensiScreen.routeName, extra: 'a');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Absensi Cluster B'),
+            onTap: () {
+              context.goNamed(AbsensiScreen.routeName, extra: 'b');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Absensi Cluster C'),
+            onTap: () {
+              context.goNamed(AbsensiScreen.routeName, extra: 'c');
               Navigator.pop(context);
             },
           ),
