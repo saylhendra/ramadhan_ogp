@@ -12,6 +12,7 @@ import '../../../core/app_theme.dart';
 import '../../sanlat/peserta_sanlat_detail_screen.dart';
 import '../../sanlat/sanlat_registration_screen.dart';
 import 'widgets/align_widget.dart';
+import 'widgets/thanks_widget.dart';
 
 //global key for form
 final formkey = GlobalKey<FormState>();
@@ -82,6 +83,7 @@ class HomeScreen extends HookConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Card(child: Center(child: ThanksWidget())),
                     Expanded(
                         flex: 0,
                         child: Padding(
