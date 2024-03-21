@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ramadhan_ogp/src/features/peserta/presentation/widgets/card_peserta_widget.dart';
+import 'package:ramadhan_ogp/src/features/peserta/presentation/card_peserta_widget.dart';
 
 import '../../../core/app_theme.dart';
 import '../../home/presentation/widgets/home_menu_widget.dart';

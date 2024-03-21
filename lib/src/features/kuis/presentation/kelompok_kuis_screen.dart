@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/features/home/presentation/widgets/home_menu_widget.dart';
 
 import '../../../core/app_theme.dart';
-import '../../peserta/presentation/widgets/card_peserta_widget.dart';
+import '../../peserta/presentation/card_peserta_widget.dart';
 import '../../sanlat/peserta_sanlat_detail_screen.dart';
 import 'kelompok_kuis_controller.dart';
 

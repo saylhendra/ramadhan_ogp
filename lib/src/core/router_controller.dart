@@ -4,6 +4,7 @@ import 'package:ramadhan_ogp/src/features/absensi/presentation/absensi_screen.da
 import 'package:ramadhan_ogp/src/features/groups/presentation/grouping_screen.dart';
 import 'package:ramadhan_ogp/src/features/groups/presentation/peserta_based_usia_screen.dart';
 import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen.dart';
+import 'package:ramadhan_ogp/src/features/peserta/presentation/peserta_dan_ortu_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 
 import '../features/home/presentation/home_screen.dart';
@@ -104,6 +105,16 @@ final GoRouter routerController = GoRouter(
           child: AbsensiScreen(
             clusterType: clusterType ?? 'a',
           ),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/peserta-dan-ortu-screen',
+      name: PesertaDanOrtuScreen.routeName,
+      pageBuilder: (context, state) {
+        // final clusterType = state.extra as String?;
+        return NoTransitionPage(
+          child: PesertaDanOrtuScreen(),
         );
       },
     ),

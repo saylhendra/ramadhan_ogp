@@ -9,6 +9,7 @@ import 'package:ramadhan_ogp/src/features/kuis/presentation/kelompok_kuis_screen
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_screen.dart';
 
 import '../../../../core/app_theme.dart';
+import '../../../peserta/presentation/peserta_dan_ortu_screen.dart';
 
 class HomeMenuWidget extends HookConsumerWidget {
   const HomeMenuWidget({super.key});
@@ -110,6 +111,13 @@ class HomeMenuWidget extends HookConsumerWidget {
             title: const Text('Absensi Cluster C'),
             onTap: () {
               context.goNamed(AbsensiScreen.routeName, extra: 'c');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Peserta Orang Tua', style: TextStyle(fontFamily: 'NotoKufiArabic')),
+            onTap: () {
+              context.pushNamed(PesertaDanOrtuScreen.routeName);
               Navigator.pop(context);
             },
           ),

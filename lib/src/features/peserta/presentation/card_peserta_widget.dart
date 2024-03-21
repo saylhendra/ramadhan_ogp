@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/app_theme.dart';
-import '../../../sanlat/peserta_sanlat_detail_screen.dart';
+import '../../../core/app_theme.dart';
+import '../../sanlat/peserta_sanlat_detail_screen.dart';
 
 class CardPesertaWidget extends StatelessWidget {
   const CardPesertaWidget({
