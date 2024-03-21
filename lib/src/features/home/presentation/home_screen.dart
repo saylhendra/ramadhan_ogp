@@ -329,7 +329,7 @@ class HomeScreen extends HookConsumerWidget {
 
   doOpenDetailPeserta(BuildContext context, dynamic peserta) {
     var paramPeserta = {
-      'id': peserta['id'].toString(),
+      'id': peserta['id'],
       'name': peserta['name'],
       'gender': peserta['gender'],
       'age': peserta['age'].toString(),
