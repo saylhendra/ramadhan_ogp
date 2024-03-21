@@ -60,11 +60,21 @@ class PesertaSanlatDetailScreen extends HookConsumerWidget {
                       //   ),
                       // ],
                       borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                        image: NetworkImage(peserta['avatar'], scale: 1.0),
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.center,
-                      ),
+                      image: peserta['gender'] == 'IKHWAN'
+                          ? DecorationImage(
+                              image: peserta['avatar'].length > 0
+                                  ? NetworkImage(peserta['avatar'], scale: 1.0)
+                                  : Image.asset('assets/images/ikhwan.png').image,
+                              fit: BoxFit.fitWidth,
+                              alignment: Alignment.center,
+                            )
+                          : DecorationImage(
+                              image: peserta['avatar'].length > 0
+                                  ? NetworkImage(peserta['avatar'], scale: 1.0)
+                                  : Image.asset('assets/images/akhwat.png').image,
+                              fit: BoxFit.fitWidth,
+                              alignment: Alignment.center,
+                            ),
                     ),
                   ),
                 ],

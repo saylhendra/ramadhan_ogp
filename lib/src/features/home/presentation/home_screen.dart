@@ -5,14 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ramadhan_ogp/src/core/utils.dart';
 import 'package:ramadhan_ogp/src/features/home/presentation/widgets/home_menu_widget.dart';
-import 'package:ramadhan_ogp/src/features/sanlat/sanlat_quiz_registration_screen.dart';
 import 'package:ramadhan_ogp/src/features/sanlat/sanlat_registration_controller.dart';
 
 import '../../../core/app_theme.dart';
 import '../../sanlat/peserta_sanlat_detail_screen.dart';
 import '../../sanlat/sanlat_registration_screen.dart';
 import 'widgets/align_widget.dart';
-import 'widgets/thanks_widget.dart';
 
 //global key for form
 final formkey = GlobalKey<FormState>();
@@ -43,30 +41,33 @@ class HomeScreen extends HookConsumerWidget {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.0),
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                backgroundColor: AppTheme.oldBrick,
-                foregroundColor: AppTheme.pinkDown,
-                shadowColor: Colors.black,
-                elevation: 4.0,
-                animationDuration: Duration(milliseconds: 300),
-              ),
-              onPressed: () {
-                if (kIsWeb) {
-                  context.pushNamed(SanlatRegistrationScreen.routeName);
-                } else {
-                  context.pushNamed(SanlatRegistrationScreen.routeName);
-                }
-              },
-              child: Container(
-                height: 32.0,
-                constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0), // min sizes for Material buttons
-                alignment: Alignment.center,
-                child: const Text(
-                  'Daftar Sanlat',
-                  textAlign: TextAlign.center,
+          Visibility(
+            visible: false,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.0),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: AppTheme.oldBrick,
+                  foregroundColor: AppTheme.pinkDown,
+                  shadowColor: Colors.black,
+                  elevation: 4.0,
+                  animationDuration: Duration(milliseconds: 300),
+                ),
+                onPressed: () {
+                  if (kIsWeb) {
+                    context.pushNamed(SanlatRegistrationScreen.routeName);
+                  } else {
+                    context.pushNamed(SanlatRegistrationScreen.routeName);
+                  }
+                },
+                child: Container(
+                  height: 32.0,
+                  constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0), // min sizes for Material buttons
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Daftar Sanlat',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -83,7 +84,29 @@ class HomeScreen extends HookConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Card(child: Center(child: ThanksWidget())),
+                    Expanded(
+                        flex: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AlignWidget(total: datas.length),
+                              SizedBox(height: 10.0),
+                              AlignWidget(
+                                type: 'chip',
+                                total: datas.where((element) => element['gender'] == 'IKHWAN').length,
+                                title: 'Ikhwan',
+                              ),
+                              SizedBox(height: 10.0),
+                              AlignWidget(
+                                type: 'chip',
+                                total: datas.where((element) => element['gender'] == 'AKHWAT').length,
+                                title: 'Akhwat',
+                              ),
+                            ],
+                          ),
+                        )),
                     Expanded(
                         flex: 0,
                         child: Padding(
@@ -173,7 +196,7 @@ class HomeScreen extends HookConsumerWidget {
                                       children: [
                                         Row(
                                           children: [
-                                            getImageBase64(peserta['avatar']),
+                                            getImageBase64(peserta['avatar'], gender: peserta['gender']),
                                             VerticalDivider(),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,38 +229,36 @@ class HomeScreen extends HookConsumerWidget {
                                         else
                                           Visibility(
                                             //visible if age is 8 or above
-                                            visible: peserta['age'] >= 8,
+                                            // visible: peserta['age'] >= 8,
+                                            visible: false,
                                             child: OutlinedButton(
                                               //onHover show tooltip
                                               onHover: (value) {
                                                 if (value) showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn');
                                               },
                                               onLongPress: () => showTooltip(context, 'Kuis', 'Hanya untuk Usia 8 - 13 thn'),
-                                              style: OutlinedButton.styleFrom(
-                                                backgroundColor: AppTheme.oldBrick,
-                                                foregroundColor: AppTheme.pinkDown,
-                                                shadowColor: Colors.black,
-                                                elevation: 4.0,
-                                                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                                                animationDuration: Duration(milliseconds: 300),
-                                              ),
-                                              onPressed: () {
-                                                context.pushNamed(
-                                                  SanlatQuizRegistrationScreen.routeName,
-                                                  extra: {
-                                                    'id': peserta['id'].toString(),
-                                                    'name': peserta['name'],
-                                                    'avatar': peserta['avatar'],
-                                                    'age': peserta['age'].toString(),
-                                                    'remarks': peserta['remarks'] ?? '-',
-                                                  },
-                                                );
-                                              },
-                                              child: Text(
-                                                'Daftarkan\nKuis?',
-                                                style: TextStyle(fontSize: 11.0),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                              // style: OutlinedButton.styleFrom(
+                                              //   // backgroundColor: AppTheme.oldBrick,
+                                              //   // foregroundColor: AppTheme.pinkDown,
+                                              //   // elevation: 4.0,
+                                              //   // shadowColor: Colors.black,
+                                              //   padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                                              //   animationDuration: Duration(milliseconds: 300),
+                                              // ),
+                                              // onPressed: () {
+                                              //   context.pushNamed(
+                                              //     SanlatQuizRegistrationScreen.routeName,
+                                              //     extra: {
+                                              //       'id': peserta['id'].toString(),
+                                              //       'name': peserta['name'],
+                                              //       'avatar': peserta['avatar'],
+                                              //       'age': peserta['age'].toString(),
+                                              //       'remarks': peserta['remarks'] ?? '-',
+                                              //     },
+                                              //   );
+                                              // },
+                                              onPressed: null,
+                                              child: Text('Daftarkan\nKuis?', style: TextStyle(fontSize: 11.0), textAlign: TextAlign.center),
                                             ),
                                           )
                                       ],
@@ -271,24 +292,27 @@ class HomeScreen extends HookConsumerWidget {
                 //   ),
                 // ),
 
-                Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045),
-                  child: Column(
-                    children: [
-                      AlignWidget(total: datas.length),
-                      SizedBox(height: 10.0),
-                      AlignWidget(
-                        type: 'chip',
-                        total: datas.where((element) => element['gender'] == 'IKHWAN').length,
-                        title: 'Ikhwan',
-                      ),
-                      SizedBox(height: 10.0),
-                      AlignWidget(
-                        type: 'chip',
-                        total: datas.where((element) => element['gender'] == 'AKHWAT').length,
-                        title: 'Akhwat',
-                      ),
-                    ],
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.045),
+                    child: Column(
+                      children: [
+                        AlignWidget(total: datas.length),
+                        SizedBox(height: 10.0),
+                        AlignWidget(
+                          type: 'chip',
+                          total: datas.where((element) => element['gender'] == 'IKHWAN').length,
+                          title: 'Ikhwan',
+                        ),
+                        SizedBox(height: 10.0),
+                        AlignWidget(
+                          type: 'chip',
+                          total: datas.where((element) => element['gender'] == 'AKHWAT').length,
+                          title: 'Akhwat',
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -299,26 +323,26 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget getImageBase64(data) {
+  Widget getImageBase64(data, {required String gender}) {
     var avatar = Container(
       width: 70.0,
       height: 70.0,
       constraints: BoxConstraints(minWidth: 50.0, minHeight: 0.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100.0),
-        image: DecorationImage(
-          image: (data != null && data.length > 0)
-              // ? MemoryImage(base64Decode(data))
-              // ? NetworkImage(data)
-              ? NetworkImage(data)
-              : Image.asset(
-                  'assets/images/no_image.jpg',
-                  width: 70.0,
-                  height: 70.0,
-                ).image,
-          fit: BoxFit.cover,
-        ),
-      ),
+          borderRadius: BorderRadius.circular(100.0),
+          image: gender == 'IKHWAN'
+              ? DecorationImage(
+                  image: (data != null && data.length > 0)
+                      ? NetworkImage(data)
+                      : Image.asset('assets/images/ikhwan.png', width: 70.0, height: 70.0).image,
+                  fit: BoxFit.cover,
+                )
+              : DecorationImage(
+                  image: (data != null && data.length > 0)
+                      ? NetworkImage(data)
+                      : Image.asset('assets/images/akhwat.png', width: 70.0, height: 70.0).image,
+                  fit: BoxFit.cover,
+                )),
       // child: BackdropFilter(
       //   filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 10.0),
       //   child: Container(

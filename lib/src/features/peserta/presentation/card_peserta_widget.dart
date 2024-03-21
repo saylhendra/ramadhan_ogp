@@ -44,10 +44,15 @@ class CardPesertaWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 gradient: AppTheme.myGradient,
-                image: DecorationImage(
-                  image: avatar.length > 0 ? NetworkImage(avatar) : Image.asset('assets/images/no_mage.jpg').image,
-                  fit: BoxFit.cover,
-                ),
+                image: gender == 'IKHWAN'
+                    ? DecorationImage(
+                        image: (avatar.length > 0 && avatar.isNotEmpty) ? NetworkImage(avatar) : Image.asset('assets/images/ikhwan.png').image,
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: (avatar.length > 0 && avatar.isNotEmpty) ? NetworkImage(avatar) : Image.asset('assets/images/akhwat.png').image,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Container(
